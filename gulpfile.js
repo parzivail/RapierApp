@@ -10,34 +10,16 @@ var gulp = require('gulp'),
 
 require('dotenv').config();
 
-var jsSources = ['web/js/*.js'],
-	htmlSources = ['web/*.html'],
-	sassSources = ['web/css/style.scss'];
-
-gulp.task('html', function (cb) {
-	pump([
-			gulp.src(htmlSources),
-			gulp.dest("static/")
-		],
-		cb);
-});
+var sassSources = ['web/scss/style.scss'];
 
 gulp.task('sass', function (cb) {
 	pump([
 			gulp.src(sassSources),
 			sass(),
-			gulp.dest("static/css")
+			concat('style.css'),
+			gulp.dest("web/css")
 		],
 		cb);
 });
 
-gulp.task('js', function (cb) {
-	pump([
-			gulp.src(jsSources),
-			uglify(),
-			gulp.dest("static/js")
-		],
-		cb);
-});
-
-gulp.task('default', ['html', 'js', 'sass']);
+gulp.task('default', ['sass']);

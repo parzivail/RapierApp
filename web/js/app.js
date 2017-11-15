@@ -3,6 +3,8 @@
  */
 var fs = require('fs');
 
+UIkit.tab("#nav", {});
+
 function resolveSteamPath(cb) {
 	// Need to make cross-platform and not rely on the Windows Registry
 	var Registry = require('winreg');
