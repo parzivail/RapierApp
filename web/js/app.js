@@ -11,31 +11,10 @@ var quipPicker = new Vue({
 	}
 });
 
-var bar = document.getElementById('js-progressbar');
-
 UIkit.upload('.js-upload', {
-	error: function () {
-		console.log('error', arguments);
-	},
-	loadStart: function (e) {
-		bar.removeAttribute('hidden');
-		bar.max = e.total;
-		bar.value = e.loaded;
-	},
-	progress: function (e) {
-		bar.max = e.total;
-		bar.value = e.loaded;
-	},
-	loadEnd: function (e) {
-		bar.max = e.total;
-		bar.value = e.loaded;
-	},
-	completeAll: function (e) {
-		setTimeout(function () {
-			bar.setAttribute('hidden', 'hidden');
-		}, 500);
-
-		console.log(document.getElementById("fileQuiplash").files);
+	beforeAll: function (e) {
+		quipPicker.quipPath = document.getElementById("fileQuiplash").files[0].path;
+		return false;
 	}
 
 });

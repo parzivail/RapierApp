@@ -26,19 +26,22 @@
 		Create
 	</li>
 	<li id="quipPicker">
-		<div class="uk-form-stacked uk-margin">
-			<div class="js-upload uk-placeholder uk-text-center">
-				<span class="uk-text-middle">Drop your Quiplash executable here or</span>
-				<div uk-form-custom>
-					<input type="file" id="fileQuiplash">
-					<span class="uk-link">select one</span>
+		<div class="uk-form-horizontal">
+			<div class="uk-margin uk-align-right">
+				<label class="uk-form-label" for="qppick">
+					Select Quiplash Executable
+				</label>
+				<div class="uk-form-controls">
+					<div class="js-upload" uk-form-custom id="qppick">
+						<input type="file" id="fileQuiplash">
+						<button class="uk-button uk-button-default" type="button" tabindex="-1">Select</button>
+					</div>
 				</div>
 			</div>
-		</div>
-		<progress id="js-progressbar" class="uk-progress" value="0" max="100" hidden></progress>
-		<div class="uk-margin">
-			<input class="uk-input" v-bind:class="{ 'uk-form-danger': isQuiplashPathInvalid }" type="text"
-				   placeholder="Enter Quiplash executable path" v-bind:value="quipPath">
+			<div class="uk-margin">
+				<input class="uk-input" v-bind:class="{ 'uk-form-danger': isQuiplashPathInvalid }" type="text"
+					   placeholder="Enter Quiplash executable path" v-bind:value="quipPath">
+			</div>
 		</div>
 	</li>
 </ul>
