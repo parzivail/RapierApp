@@ -3,7 +3,42 @@
  */
 var fs = require('fs');
 
-UIkit.tab("#nav", {});
+var quipPicker = new Vue({
+	el: "#quipPicker",
+	data: {
+		isQuiplashPathInvalid: false,
+		quipPath: ""
+	}
+});
+
+var bar = document.getElementById('js-progressbar');
+
+UIkit.upload('.js-upload', {
+	error: function () {
+		console.log('error', arguments);
+	},
+	loadStart: function (e) {
+		bar.removeAttribute('hidden');
+		bar.max = e.total;
+		bar.value = e.loaded;
+	},
+	progress: function (e) {
+		bar.max = e.total;
+		bar.value = e.loaded;
+	},
+	loadEnd: function (e) {
+		bar.max = e.total;
+		bar.value = e.loaded;
+	},
+	completeAll: function (e) {
+		setTimeout(function () {
+			bar.setAttribute('hidden', 'hidden');
+		}, 500);
+
+		console.log(document.getElementById("fileQuiplash").files);
+	}
+
+});
 
 function resolveSteamPath(cb) {
 	// Need to make cross-platform and not rely on the Windows Registry

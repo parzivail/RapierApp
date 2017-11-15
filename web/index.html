@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html xmlns:v-bind="http://www.w3.org/1999/xhtml">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,34 +17,7 @@
 </ul>
 <ul class="uk-switcher uk-padding">
 	<li>
-		<form class="uk-form-stacked">
-
-			<div class="uk-margin">
-				<label class="uk-form-label" for="form-stacked-text">Text</label>
-				<div class="uk-form-controls">
-					<input class="uk-input" id="form-stacked-text" type="text" placeholder="Some text...">
-				</div>
-			</div>
-
-			<div class="uk-margin">
-				<label class="uk-form-label" for="form-stacked-select">Select</label>
-				<div class="uk-form-controls">
-					<select class="uk-select" id="form-stacked-select">
-						<option>Option 01</option>
-						<option>Option 02</option>
-					</select>
-				</div>
-			</div>
-
-			<div class="uk-margin">
-				<div class="uk-form-label">Radio</div>
-				<div class="uk-form-controls">
-					<label><input class="uk-radio" type="radio" name="radio1"> Option 01</label><br>
-					<label><input class="uk-radio" type="radio" name="radio1"> Option 02</label>
-				</div>
-			</div>
-
-		</form>
+		Home
 	</li>
 	<li>
 		Manage
@@ -52,20 +25,26 @@
 	<li>
 		Create
 	</li>
-	<li>
+	<li id="quipPicker">
 		<div class="uk-form-stacked uk-margin">
-			<div class="uk-margin">
-				<label class="uk-form-label" for="steamDir">Steam Directory</label>
-				<div class="uk-form-controls">
-					<input class="uk-input" type="file" id="steamDir" webkitdirectory>
+			<div class="js-upload uk-placeholder uk-text-center">
+				<span class="uk-text-middle">Drop your Quiplash executable here or</span>
+				<div uk-form-custom>
+					<input type="file" id="fileQuiplash">
+					<span class="uk-link">select one</span>
 				</div>
 			</div>
+		</div>
+		<progress id="js-progressbar" class="uk-progress" value="0" max="100" hidden></progress>
+		<div class="uk-margin">
+			<input class="uk-input" v-bind:class="{ 'uk-form-danger': isQuiplashPathInvalid }" type="text"
+				   placeholder="Enter Quiplash executable path" v-bind:value="quipPath">
 		</div>
 	</li>
 </ul>
 <script src="js/uikit.min.js"></script>
 <script src="js/uikit-icons.min.js"></script>
-<script src="js/riot.min.js"></script>
+<script src="js/vue.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
