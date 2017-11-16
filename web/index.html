@@ -6,48 +6,56 @@
 	<title>Rapier</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 	<link rel="stylesheet" href="css/uikit.min.css">
+	<link rel="stylesheet" href="css/sweetalert2.min.css">
 	<link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-<ul class="uk-flex-center" uk-tab id="nav">
-	<li><a>Home</a></li>
-	<li><a>Manage DLC</a></li>
-	<li><a>Create DLC</a></li>
-	<li><a>Setup</a></li>
-</ul>
-<ul class="uk-switcher uk-padding">
-	<li>
-		Home
-	</li>
-	<li>
-		Manage
-	</li>
-	<li>
-		Create
-	</li>
-	<li id="quipPicker">
-		<div class="uk-form-horizontal">
-			<div class="uk-margin uk-align-right">
-				<label class="uk-form-label" for="qppick">
-					Select Quiplash Executable
-				</label>
-				<div class="uk-form-controls">
-					<div class="js-upload" uk-form-custom id="qppick">
-						<input type="file" id="fileQuiplash">
-						<button class="uk-button uk-button-default" type="button" tabindex="-1">Select</button>
+<div id="rapier">
+	<ul class="uk-flex-center" uk-tab id="nav">
+		<li><a>Home</a></li>
+		<li><a>Manage DLC</a></li>
+		<li><a>Create DLC</a></li>
+		<li><a>Setup</a></li>
+	</ul>
+	<ul class="uk-switcher uk-padding">
+		<li>
+			Home
+		</li>
+		<li>
+			Manage
+		</li>
+		<li>
+			Create
+		</li>
+		<li>
+			<div class="uk-form-horizontal">
+				<div class="uk-margin uk-align-right">
+					<label class="uk-form-label" for="qppick">
+						Select Quiplash Executable
+					</label>
+					<div class="uk-form-controls">
+						<div class="js-upload" uk-form-custom id="qppick">
+							<input type="file" id="fileQuiplash">
+							<button class="uk-button uk-button-default" type="button" tabindex="-1">Select</button>
+						</div>
 					</div>
 				</div>
+				<div class="uk-margin">
+					<input class="uk-input" id="textQuiplash" v-bind:class="{ 'uk-form-danger': isQuiplashPathInvalid }"
+						   type="text"
+						   placeholder="Enter Quiplash executable path" v-model="quipPath">
+				</div>
 			</div>
-			<div class="uk-margin">
-				<input class="uk-input" v-bind:class="{ 'uk-form-danger': isQuiplashPathInvalid }" type="text"
-					   placeholder="Enter Quiplash executable path" v-model="quipPath">
-			</div>
-		</div>
-	</li>
-</ul>
+		</li>
+	</ul>
+</div>
+<div hidden id="modalInvalidPath">
+	Invalid Quiplash executable
+</div>
 <script src="js/uikit.min.js"></script>
 <script src="js/uikit-icons.min.js"></script>
 <script src="js/vue.js"></script>
+<script src="js/sweetalert2.min.js"></script>
 <script src="js/app.js"></script>
 </body>
 </html>
