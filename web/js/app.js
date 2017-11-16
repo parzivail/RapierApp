@@ -41,7 +41,19 @@ var app = new Vue({
 		isQuiplashPathInvalid: false,
 		quipPath: nconf.get('quiplash:path'),
 		loadedDlc: [
-			{id: 0, name: "Quiplash Core", path: "/etc/quipdlc/core", episodeid: 0},
+			{
+				id: 0, name: "Quiplash Core", path: "/etc/quipdlc/core", episodeid: 0, prompts: [
+				{
+					prompt: "The most boring game you've ever played",
+					mature: false,
+					author: "Smitty",
+					location: "Ohio",
+					hasJoke: false,
+					jokeKeywords: "",
+					jokeResponseText: ""
+				}
+			]
+			},
 			{id: 999, name: "CoolDLC", path: "/etc/quipdlc/cooldlc", episodeid: 999},
 			{id: 2938745, name: "BestDLC", path: "/etc/quipdlc/bestdlc", episodeid: 19287},
 		]
@@ -49,8 +61,7 @@ var app = new Vue({
 });
 
 UIkit.tab("#tabDlc", {
-	connect: "#component-nav",
-	animation: "uk-animation-fade"
+	connect: "#component-nav"
 });
 
 /*

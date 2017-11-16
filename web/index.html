@@ -38,10 +38,31 @@
 								<div class="uk-legend">Pack Editor</div>
 								<div class="uk-margin">
 									<label class="uk-form-label" for="episodeid">Episode ID</label>
-									<input class="uk-input" type="number" id="episodeid" v-model.number="item.episodeid"
+									<input class="uk-input" type="number" disabled="disabled" id="episodeid"
+										   v-bind:value="item.episodeid"
 										   placeholder="Episode ID">
 								</div>
 							</div>
+							<table class="uk-table">
+								<thead>
+								<tr>
+									<th>Prompt</th>
+									<th>Actions</th>
+								</tr>
+								</thead>
+								<tbody>
+								<tr v-for="prompt in item.prompts">
+									<td>{{ prompt.prompt }}</td>
+									<td>
+										<ul class="uk-iconnav">
+											<li><a href="#" :uk-icon="'icon: file-edit'" title="Edit"></a></li>
+											<li><a href="#" :uk-icon="'icon: trash'" class="uk-text-danger"
+												   title="Delete"></a></li>
+										</ul>
+									</td>
+								</tr>
+								</tbody>
+							</table>
 						</li>
 					</ul>
 				</div>
