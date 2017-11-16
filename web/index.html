@@ -25,8 +25,12 @@
 			<div uk-grid>
 				<div class="uk-width-small@m">
 					<ul class="uk-nav uk-nav-default uk-tab-left"
-						uk-tab="connect: #component-nav; animation: uk-animation-fade;">
-						<li><a href="#">DLC</a></li>
+						id="tabDlc">
+						<dlc-item
+								v-for="item in loadedDlc"
+								v-bind:dlc="item"
+								v-bind:key="item.id">
+						</dlc-item>
 					</ul>
 				</div>
 				<div class="uk-width-expand@m">
