@@ -33,13 +33,16 @@
 				</div>
 				<div class="uk-width-expand@m">
 					<ul id="component-nav" class="uk-switcher">
-						<fieldset class="uk-fieldset" v-for="item in loadedDlc" v-bind:key="item.id">
-							<legend class="uk-legend">Pack Editor</legend>
-							<div class="uk-margin">
-								<input class="uk-input" type="number" v-model.number="item.episodeid"
-									   placeholder="Episode ID">
+						<li v-for="item in loadedDlc" v-bind:key="item.id">
+							<div class="uk-fieldset">
+								<div class="uk-legend">Pack Editor</div>
+								<div class="uk-margin">
+									<label class="uk-form-label" for="episodeid">Episode ID</label>
+									<input class="uk-input" type="number" id="episodeid" v-model.number="item.episodeid"
+										   placeholder="Episode ID">
+								</div>
 							</div>
-						</fieldset>
+						</li>
 					</ul>
 				</div>
 			</div>

@@ -41,9 +41,9 @@ var app = new Vue({
 		isQuiplashPathInvalid: false,
 		quipPath: nconf.get('quiplash:path'),
 		loadedDlc: [
-			{id: 0, name: "Quiplash Core", path: "/etc/quipdlc/core", promptid: 0},
-			{id: 999, name: "CoolDLC", path: "/etc/quipdlc/cooldlc", promptid: 999},
-			{id: 2938745, name: "BestDLC", path: "/etc/quipdlc/bestdlc", promptid: 19287},
+			{id: 0, name: "Quiplash Core", path: "/etc/quipdlc/core", episodeid: 0},
+			{id: 999, name: "CoolDLC", path: "/etc/quipdlc/cooldlc", episodeid: 999},
+			{id: 2938745, name: "BestDLC", path: "/etc/quipdlc/bestdlc", episodeid: 19287},
 		]
 	}
 });
