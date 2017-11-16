@@ -3,10 +3,12 @@
  */
 const nconf = require('nconf'),
 	fs = require('fs'),
+	path = require('path'),
 	rq = require('electron-require'),
 	temp = rq.set('local', './web/js/modules'),
 	fileutils = rq.local('./fileutils'),
 	by = rq.local('./by'),
+	quiplash = rq.local('./quiplash'),
 	alert = rq.local('./alert');
 
 /*
@@ -40,25 +42,23 @@ var app = new Vue({
 	data: {
 		isQuiplashPathInvalid: false,
 		quipPath: nconf.get('quiplash:path'),
-		loadedDlc: [
-			{
-				id: 0, name: "Quiplash Core", path: "/etc/quipdlc/core", episodeid: 0, prompts: [
-				{
-					prompt: "The most boring game you've ever played",
-					mature: false,
-					author: "Smitty",
-					location: "Ohio",
-					hasJoke: false,
-					jokeKeywords: "",
-					jokeResponseText: ""
-				}
-			]
-			},
-			{id: 999, name: "CoolDLC", path: "/etc/quipdlc/cooldlc", episodeid: 999},
-			{id: 2938745, name: "BestDLC", path: "/etc/quipdlc/bestdlc", episodeid: 19287},
-		]
+		loadedDlc: []
 	}
 });
+
+var quipDir = fileutils.isValidQuiplash(app.quipPath);
+if (quipDir) {
+	var defaultPack = quiplash.loadDlcPath(path.join(quipDir, 'content'));
+	if (!defaultPack)
+		throw new Error("Could not load Quiplash content");
+
+	app.loadedDlc.push(defaultPack);
+
+	var dlcDir = path.join(quipDir, 'DLC'),
+		otherPackDirs = fs.readdirSync(dlcDir).filter(f => fs.statSync(path.join(dlcDir, f)).isDirectory());
+	for (var i = 0; i < otherPackDirs.length; i++)
+		app.loadedDlc.push(quiplash.loadDlcPath(path.join(dlcDir, otherPackDirs[i])));
+}
 
 UIkit.tab("#tabDlc", {
 	connect: "#component-nav"

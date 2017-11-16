@@ -12,6 +12,7 @@
   "dependencies": {
     "dotenv": "4.0.0",
 	"electron-require": "0.3.0",
+	"jsonfile": "4.0.0",
 	"nconf": "0.9.1",
     "winreg": "1.2.4"
   },

@@ -7,7 +7,6 @@ const path = require('path'),
 module.exports = {
 	isValidQuiplash: function (file) {
 		var dir = path.dirname(file);
-		dir = path.join(dir, 'content', 'manifest.jet');
-		return fs.existsSync(dir);
+		return fs.existsSync(path.join(dir, 'content', 'manifest.jet')) ? dir : false;
 	},
 };

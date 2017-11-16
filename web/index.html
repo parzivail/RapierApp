@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:v-bind="http://www.w3.org/1999/xhtml">
+<html xmlns:v-bind="http://www.w3.org/1999/xhtml" xmlns:v-on="http://www.w3.org/1999/xhtml">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -28,7 +28,7 @@
 					<ul class="uk-nav uk-nav-default uk-tab-left"
 						id="tabDlc">
 						<li v-for="item in loadedDlc">
-							<a href="#">{{ item.name }}</a>
+							<a href="#">{{ item.manifest.name }}</a>
 						</li>
 					</ul>
 				</div>
@@ -44,7 +44,8 @@
 										   placeholder="Episode ID">
 								</div>
 							</div>
-							<table class="uk-table">
+							<table class="uk-table uk-table-striped">
+								<caption>{{ item.questions.length }} prompts</caption>
 								<thead>
 								<tr>
 									<th>Prompt</th>
@@ -52,12 +53,13 @@
 								</tr>
 								</thead>
 								<tbody>
-								<tr v-for="prompt in item.prompts">
+								<tr v-for="(prompt, idx) in item.questions">
 									<td>{{ prompt.prompt }}</td>
 									<td>
 										<ul class="uk-iconnav">
 											<li><a :uk-icon="'icon: file-edit'" title="Edit"></a></li>
 											<li><a :uk-icon="'icon: trash'" class="uk-text-danger"
+												   v-on:click="item.questions.splice(idx, 1)"
 												   title="Delete"></a></li>
 										</ul>
 									</td>
