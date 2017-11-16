@@ -11,7 +11,7 @@
 </head>
 <body>
 <div id="rapier">
-	<ul class="uk-flex-center" uk-tab id="nav">
+	<ul class="uk-flex-center" id="nav" uk-tab="animation: uk-animation-fade;">
 		<li><a>Home</a></li>
 		<li><a>Manage DLC</a></li>
 		<li><a>Create DLC</a></li>
@@ -22,7 +22,27 @@
 			Home
 		</li>
 		<li>
-			Manage
+			<div uk-grid>
+				<div class="uk-width-small@m">
+					<ul class="uk-nav uk-nav-default uk-tab-left"
+						uk-tab="connect: #component-nav; animation: uk-animation-fade;">
+						<li><a href="#">DLC</a></li>
+					</ul>
+				</div>
+				<div class="uk-width-expand@m">
+					<ul id="component-nav" class="uk-switcher">
+						<li>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
+							labore et dolore magna aliqua.
+						</li>
+						<li>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
+							commodo consequat.
+						</li>
+						<li>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
+							pariatur, sed do eiusmod.
+						</li>
+					</ul>
+				</div>
+			</div>
 		</li>
 		<li>
 			Create
@@ -48,9 +68,6 @@
 			</div>
 		</li>
 	</ul>
-</div>
-<div hidden id="modalInvalidPath">
-	Invalid Quiplash executable
 </div>
 <script src="js/uikit.min.js"></script>
 <script src="js/uikit-icons.min.js"></script>
