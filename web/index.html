@@ -15,6 +15,7 @@
 		<li><a>Home</a></li>
 		<li><a>Manage DLC</a></li>
 		<li><a>Create DLC</a></li>
+		<li><a>Prompt Editor</a></li>
 		<li><a>Setup</a></li>
 	</ul>
 	<ul class="uk-switcher uk-padding">
@@ -55,8 +56,8 @@
 									<td>{{ prompt.prompt }}</td>
 									<td>
 										<ul class="uk-iconnav">
-											<li><a href="#" :uk-icon="'icon: file-edit'" title="Edit"></a></li>
-											<li><a href="#" :uk-icon="'icon: trash'" class="uk-text-danger"
+											<li><a :uk-icon="'icon: file-edit'" title="Edit"></a></li>
+											<li><a :uk-icon="'icon: trash'" class="uk-text-danger"
 												   title="Delete"></a></li>
 										</ul>
 									</td>
@@ -70,6 +71,9 @@
 		</li>
 		<li>
 			Create
+		</li>
+		<li>
+			Prompt Editor
 		</li>
 		<li>
 			<div class="uk-form-horizontal">
