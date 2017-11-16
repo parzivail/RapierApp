@@ -35,20 +35,15 @@ function onQuiplashPathChange(newPath) {
 /*
  * Vue App
  */
-Vue.component('dlc-item', {
-	props: ['dlc'],
-	template: '<li><a href="#">{{ dlc.name }}</a></li>'
-});
-
 var app = new Vue({
 	el: "#rapier",
 	data: {
 		isQuiplashPathInvalid: false,
 		quipPath: nconf.get('quiplash:path'),
 		loadedDlc: [
-			{id: 0, name: "Quiplash Core", path: "/etc/quipdlc/core"},
-			{id: 999, name: "CoolDLC", path: "/etc/quipdlc/cooldlc"},
-			{id: 2938745, name: "BestDLC", path: "/etc/quipdlc/bestdlc"},
+			{id: 0, name: "Quiplash Core", path: "/etc/quipdlc/core", promptid: 0},
+			{id: 999, name: "CoolDLC", path: "/etc/quipdlc/cooldlc", promptid: 999},
+			{id: 2938745, name: "BestDLC", path: "/etc/quipdlc/bestdlc", promptid: 19287},
 		]
 	}
 });

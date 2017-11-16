@@ -26,24 +26,20 @@
 				<div class="uk-width-small@m">
 					<ul class="uk-nav uk-nav-default uk-tab-left"
 						id="tabDlc">
-						<dlc-item
-								v-for="item in loadedDlc"
-								v-bind:dlc="item"
-								v-bind:key="item.id">
-						</dlc-item>
+						<li v-for="item in loadedDlc">
+							<a href="#">{{ item.name }}</a>
+						</li>
 					</ul>
 				</div>
 				<div class="uk-width-expand@m">
 					<ul id="component-nav" class="uk-switcher">
-						<li>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut
-							labore et dolore magna aliqua.
-						</li>
-						<li>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea
-							commodo consequat.
-						</li>
-						<li>Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla
-							pariatur, sed do eiusmod.
-						</li>
+						<fieldset class="uk-fieldset" v-for="item in loadedDlc" v-bind:key="item.id">
+							<legend class="uk-legend">Pack Editor</legend>
+							<div class="uk-margin">
+								<input class="uk-input" type="number" v-model.number="item.episodeid"
+									   placeholder="Episode ID">
+							</div>
+						</fieldset>
 					</ul>
 				</div>
 			</div>
