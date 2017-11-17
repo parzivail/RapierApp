@@ -18,7 +18,7 @@
 		<li><a>Prompt Editor</a></li>
 		<li><a>Setup</a></li>
 	</ul>
-	<ul class="uk-switcher uk-padding">
+	<ul class="uk-switcher uk-padding" id="pages">
 		<li>
 			Home
 		</li>
@@ -89,6 +89,9 @@
 				</div>
 				<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
 					<label><input class="uk-checkbox" type="checkbox" v-model="editorPrompt.mature"> Mature</label>
+				</div>
+				<div class="uk-margin">
+					<button class="uk-button uk-button-default uk-align-right" v-on:click="stopEditing()">Save</button>
 				</div>
 			</fieldset>
 		</li>

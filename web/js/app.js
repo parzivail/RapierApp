@@ -60,7 +60,8 @@ function onQuiplashPathChange(newPath) {
 /*
  * Vue App
  */
-var app = new Vue({
+var tabs,
+	app = new Vue({
 	el: "#rapier",
 	data: {
 		isQuiplashPathInvalid: false,
@@ -76,6 +77,19 @@ var app = new Vue({
 			this.editorPrompt.text = prompt.prompt;
 			this.editorPrompt.id = prompt.id;
 			this.editorPrompt.mature = prompt.x;
+			this.editorPrompt.uuid = prompt.uuid;
+		},
+		stopEditing: function () {
+			// there has to be a better way to do this
+			for (var dlc = 0; dlc < this.loadedDlc.length; dlc++)
+				for (var i = 0; i < this.loadedDlc[dlc].questions.length; i++)
+					if (this.loadedDlc[dlc].questions[i].uuid === this.editorPrompt.uuid) {
+						this.loadedDlc[dlc].questions.splice(i, 1, {
+							prompt: this.editorPrompt.text,
+							x: this.editorPrompt.mature
+						});
+						tabs.show(1);
+					}
 		}
 	}
 });
@@ -84,6 +98,10 @@ onQuiplashPathChange(nconf.get('quiplash:path'));
 
 UIkit.tab("#tabDlc", {
 	connect: "#component-nav"
+});
+
+tabs = UIkit.tab("#nav", {
+	connect: "#pages"
 });
 
 /*

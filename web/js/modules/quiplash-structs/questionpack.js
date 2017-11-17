@@ -1,13 +1,15 @@
 /**
  * Created by colby on 11/16/2017.
  */
+var uuid = require('uuid/v4');
+
 var QuestionPack = function (content, manifest) {
 	this.questions = content.content;
 	this.episodeId = content.episodeid;
 	this.manifest = manifest;
 
 	for (var i = 0; i < this.questions.length; i++) {
-		this.questions[i].uuid = 0;
+		this.questions[i].uuid = uuid();
 	}
 };
 
