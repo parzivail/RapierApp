@@ -22,6 +22,26 @@ if (!nconf.get('quiplash'))
 /*
  * UI Helpers
  */
+function loadDlcFromInstallDir() {
+	var quipDir = fileutils.isValidQuiplash(app.quipPath);
+	if (quipDir) {
+		app.loadedDlc.splice(0, app.loadedDlc.length);
+		var defaultPack = quiplash.loadDlcPath(path.join(quipDir, 'content'));
+		if (!defaultPack)
+			throw new Error("Could not load Quiplash content");
+
+		app.loadedDlc.push(defaultPack);
+
+		var dlcDir = path.join(quipDir, 'DLC'),
+			otherPackDirs = fs.readdirSync(dlcDir).filter(f => fs.statSync(path.join(dlcDir, f)).isDirectory());
+		for (var i = 0; i < otherPackDirs.length; i++)
+			app.loadedDlc.push(quiplash.loadDlcPath(path.join(dlcDir, otherPackDirs[i])));
+	}
+	else {
+		alert.error("Navigate to the SETUP tab to select your Quiplash installation.");
+	}
+}
+
 function onQuiplashPathChange(newPath) {
 	app.quipPath = newPath || app.quipPath;
 	app.isQuiplashPathInvalid = !fileutils.isValidQuiplash(app.quipPath);
@@ -29,6 +49,7 @@ function onQuiplashPathChange(newPath) {
 		alert.error("That isn't a valid Quiplash executable.<br /><br />A valid path looks similar to:<pre>C:\\Program Files (x86)\\...\\Quiplash\\Quiplash.exe</pre>")
 	}
 	else {
+		loadDlcFromInstallDir();
 		nconf.set('quiplash:path', app.quipPath);
 		nconf.save();
 	}
@@ -55,20 +76,6 @@ var app = new Vue({
 		}
 	}
 });
-
-var quipDir = fileutils.isValidQuiplash(app.quipPath);
-if (quipDir) {
-	var defaultPack = quiplash.loadDlcPath(path.join(quipDir, 'content'));
-	if (!defaultPack)
-		throw new Error("Could not load Quiplash content");
-
-	app.loadedDlc.push(defaultPack);
-
-	var dlcDir = path.join(quipDir, 'DLC'),
-		otherPackDirs = fs.readdirSync(dlcDir).filter(f => fs.statSync(path.join(dlcDir, f)).isDirectory());
-	for (var i = 0; i < otherPackDirs.length; i++)
-		app.loadedDlc.push(quiplash.loadDlcPath(path.join(dlcDir, otherPackDirs[i])));
-}
 
 UIkit.tab("#tabDlc", {
 	connect: "#component-nav"
