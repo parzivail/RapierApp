@@ -42,7 +42,17 @@ var app = new Vue({
 	data: {
 		isQuiplashPathInvalid: false,
 		quipPath: nconf.get('quiplash:path'),
-		loadedDlc: []
+		loadedDlc: [],
+		editorPrompt: {
+			text: "",
+			id: 0,
+			mature: false
+		},
+		startEditing: function (prompt) {
+			this.editorPrompt.text = prompt.prompt;
+			this.editorPrompt.id = prompt.id;
+			this.editorPrompt.mature = prompt.x;
+		}
 	}
 });
 

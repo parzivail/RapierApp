@@ -11,7 +11,7 @@
 </head>
 <body>
 <div id="rapier">
-	<ul class="uk-flex-center" id="nav" uk-tab="animation: uk-animation-fade;">
+	<ul class="uk-flex-center uk-background-muted" id="nav" uk-tab="animation: uk-animation-fade;">
 		<li><a>Home</a></li>
 		<li><a>Manage DLC</a></li>
 		<li><a>Create DLC</a></li>
@@ -40,7 +40,7 @@
 								<div class="uk-margin">
 									<label class="uk-form-label" for="episodeid">Episode ID</label>
 									<input class="uk-input" type="number" disabled="disabled" id="episodeid"
-										   v-bind:value="item.episodeid"
+										   v-bind:value="item.episodeId"
 										   placeholder="Episode ID">
 								</div>
 							</div>
@@ -57,7 +57,8 @@
 									<td>{{ prompt.prompt }}</td>
 									<td>
 										<ul class="uk-iconnav">
-											<li><a :uk-icon="'icon: file-edit'" title="Edit"></a></li>
+											<li><a :uk-icon="'icon: file-edit'" title="Edit"
+												   v-on:click="startEditing(prompt)"></a></li>
 											<li><a :uk-icon="'icon: trash'" class="uk-text-danger"
 												   v-on:click="item.questions.splice(idx, 1)"
 												   title="Delete"></a></li>
@@ -75,7 +76,18 @@
 			Create
 		</li>
 		<li>
-			Prompt Editor
+			<fieldset class="uk-fieldset">
+				<legend class="uk-legend">Prompt Editor</legend>
+				<div class="uk-margin">
+					<input class="uk-input" type="text" placeholder="Prompt Text" v-model="editorPrompt.text">
+				</div>
+				<div class="uk-margin">
+					<input class="uk-input" type="number" placeholder="Prompt ID" v-model="editorPrompt.id">
+				</div>
+				<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+					<label><input class="uk-checkbox" type="checkbox" v-model="editorPrompt.mature"> Mature</label>
+				</div>
+			</fieldset>
 		</li>
 		<li>
 			<div class="uk-form-horizontal">
