@@ -43,6 +43,7 @@ function loadDlcFromInstallDir() {
 }
 
 function onQuiplashPathChange(newPath) {
+	app.appLoaded = false;
 	app.quipPath = newPath || app.quipPath;
 	app.isQuiplashPathInvalid = !fileutils.isValidQuiplash(app.quipPath);
 	if (app.isQuiplashPathInvalid) {
@@ -53,6 +54,7 @@ function onQuiplashPathChange(newPath) {
 		nconf.set('quiplash:path', app.quipPath);
 		nconf.save();
 	}
+	app.appLoaded = true;
 }
 
 /*
@@ -64,6 +66,7 @@ var app = new Vue({
 		isQuiplashPathInvalid: false,
 		quipPath: nconf.get('quiplash:path'),
 		loadedDlc: [],
+		appLoaded: false,
 		editorPrompt: {
 			text: "",
 			id: 0,
@@ -76,6 +79,8 @@ var app = new Vue({
 		}
 	}
 });
+
+onQuiplashPathChange(nconf.get('quiplash:path'));
 
 UIkit.tab("#tabDlc", {
 	connect: "#component-nav"
