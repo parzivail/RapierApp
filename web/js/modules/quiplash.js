@@ -5,8 +5,8 @@ var jsonfile = require('jsonfile'),
 	path = require('path'),
 	rq = require('electron-require'),
 	temp = rq.set('local', './web/js/modules'),
-	Manifest = rq.local('./quiplash-structs/manifest');
-QuestionPack = rq.local('./quiplash-structs/questionpack');
+	Manifest = rq.local('./quiplash-structs/manifest'),
+	QuestionPack = rq.local('./quiplash-structs/questionpack');
 
 module.exports = {
 	loadDlcPath: function (dlcpath) {
@@ -18,7 +18,7 @@ module.exports = {
 		var manifest = jsonfile.readFileSync(manifestPath);
 		if (!manifest)
 			return null;
-		manifest = new Manifest(manifest.id, manifest.name, manifest.types);
+		manifest = new Manifest(manifest.id, manifest.name, manifest.types, dlcpath);
 		if (!manifest.validate())
 			return null;
 

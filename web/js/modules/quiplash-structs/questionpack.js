@@ -17,4 +17,12 @@ QuestionPack.prototype.validate = function () {
 	return !!this.questions && this.questions.length !== 0;
 };
 
+QuestionPack.prototype.save = function () {
+	// TODO
+};
+
+QuestionPack.prototype.delete = function () {
+	// TODO
+};
+
 module.exports = QuestionPack;

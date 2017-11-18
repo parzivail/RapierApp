@@ -62,37 +62,62 @@ function onQuiplashPathChange(newPath) {
  */
 var tabs,
 	app = new Vue({
-	el: "#rapier",
-	data: {
-		isQuiplashPathInvalid: false,
-		quipPath: nconf.get('quiplash:path'),
-		loadedDlc: [],
-		appLoaded: false,
-		editorPrompt: {
-			text: "",
-			id: 0,
-			mature: false
-		},
-		startEditing: function (prompt) {
-			this.editorPrompt.text = prompt.prompt;
-			this.editorPrompt.id = prompt.id;
-			this.editorPrompt.mature = prompt.x;
-			this.editorPrompt.uuid = prompt.uuid;
-		},
-		stopEditing: function () {
-			// there has to be a better way to do this
-			for (var dlc = 0; dlc < this.loadedDlc.length; dlc++)
-				for (var i = 0; i < this.loadedDlc[dlc].questions.length; i++)
-					if (this.loadedDlc[dlc].questions[i].uuid === this.editorPrompt.uuid) {
-						this.loadedDlc[dlc].questions.splice(i, 1, {
-							prompt: this.editorPrompt.text,
-							x: this.editorPrompt.mature
-						});
-						tabs.show(1);
-					}
+		el: "#rapier",
+		data: {
+			isQuiplashPathInvalid: false,
+			quipPath: nconf.get('quiplash:path'),
+			loadedDlc: [],
+			appLoaded: false,
+			editing: false,
+			promptFilter: "",
+			editorPrompt: {
+				text: "",
+				id: 0,
+				mature: false
+			},
+			startEditing: function (prompt) {
+				this.editorPrompt.text = prompt.prompt;
+				this.editorPrompt.id = prompt.id;
+				this.editorPrompt.mature = prompt.x;
+				this.editorPrompt.uuid = prompt.uuid;
+				this.editing = true;
+				tabs.show(3);
+			},
+			stopEditing: function () {
+				// there has to be a better way to do this
+				for (var dlc = 0; dlc < this.loadedDlc.length; dlc++)
+					for (var i = 0; i < this.loadedDlc[dlc].questions.length; i++)
+						if (this.loadedDlc[dlc].questions[i].uuid === this.editorPrompt.uuid) {
+							this.loadedDlc[dlc].questions.splice(i, 1, {
+								prompt: this.editorPrompt.text,
+								x: this.editorPrompt.mature
+							});
+							tabs.show(1);
+							this.editing = false;
+							this.editorPrompt.text = null;
+							this.editorPrompt.id = null;
+							this.editorPrompt.mature = null;
+						}
+			},
+			saveDlc: function (dlc) {
+				alert.confirm("Are you sure you want to save \"" + dlc.manifest.name + "\"? This will overwrite the current content.", function (shouldSave) {
+					if (!shouldSave)
+						return;
+					dlc.save();
+				})
+			},
+			deleteDlc: function (dlc) {
+				if (dlc.episodeId === 1223)
+					alert.info("You cannot delete the main content pack.");
+				else
+					alert.confirm("Are you sure you want to delete \"" + dlc.manifest.name + "\"? This cannot be undone.", function (shouldDelete) {
+						if (!shouldDelete)
+							return;
+						dlc.delete();
+					}, true)
+			}
 		}
-	}
-});
+	});
 
 onQuiplashPathChange(nconf.get('quiplash:path'));
 

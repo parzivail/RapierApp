@@ -21,13 +21,14 @@
 	<ul class="uk-switcher uk-padding" id="pages">
 		<li>
 			Home
+			<!-- TODO -->
 		</li>
 		<li>
 			<div v-if="!appLoaded">
 				<vue-simple-spinner></vue-simple-spinner>
 			</div>
 			<div uk-grid>
-				<div class="uk-width-small@m">
+				<div class="uk-width-small">
 					<ul class="uk-nav uk-nav-default uk-tab-left"
 						id="tabDlc">
 						<li v-for="item in loadedDlc">
@@ -35,16 +36,39 @@
 						</li>
 					</ul>
 				</div>
-				<div class="uk-width-expand@m">
+				<div class="uk-width-expand">
 					<ul id="component-nav" class="uk-switcher">
 						<li v-for="item in loadedDlc" v-bind:key="item.id">
 							<div class="uk-fieldset">
 								<div class="uk-legend">Pack Editor</div>
-								<div class="uk-margin">
-									<label class="uk-form-label" for="episodeid">Episode ID</label>
-									<input class="uk-input" type="number" disabled="disabled" id="episodeid"
-										   v-bind:value="item.episodeId"
-										   placeholder="Episode ID">
+								<div class="uk-form-horizontal">
+									<div class="uk-margin">
+										<label class="uk-form-label" for="episodeid">Episode ID</label>
+										<div class="uk-form-controls">
+											<input class="uk-input" type="number" disabled="disabled" id="episodeid"
+												   v-bind:value="item.episodeId"
+												   placeholder="Episode ID">
+										</div>
+									</div>
+									<div class="uk-margin">
+										<label class="uk-form-label" for="savedlc">Actions</label>
+										<div class="uk-form-controls">
+											<button class="uk-button uk-button-default"
+													v-on:click="saveDlc(item)" id="savedlc">Save Pack
+											</button>
+											<button class="uk-button uk-button-danger" v-if="item.episodeId !== 1223"
+													v-on:click="deleteDlc(item)">Delete Pack
+											</button>
+										</div>
+									</div>
+									<div class="uk-margin">
+										<label class="uk-form-label" for="filter">Filter Prompts</label>
+										<div class="uk-form-controls">
+											<input class="uk-input" type="text" id="filter"
+												   v-model="promptFilter"
+												   placeholder="Filter RegEx">
+										</div>
+									</div>
 								</div>
 							</div>
 							<table class="uk-table uk-table-striped">
@@ -56,7 +80,8 @@
 								</tr>
 								</thead>
 								<tbody>
-								<tr v-for="(prompt, idx) in item.questions">
+								<tr v-for="(prompt, idx) in item.questions" v-bind:id="prompt.uuid"
+									v-if="prompt.prompt.search(promptFilter) !== -1 || !promptFilter">
 									<td>{{ prompt.prompt }}</td>
 									<td>
 										<ul class="uk-iconnav">
@@ -77,21 +102,27 @@
 		</li>
 		<li>
 			Create
+			<!-- TODO -->
 		</li>
 		<li>
 			<fieldset class="uk-fieldset">
 				<legend class="uk-legend">Prompt Editor</legend>
 				<div class="uk-margin">
-					<input class="uk-input" type="text" placeholder="Prompt Text" v-model="editorPrompt.text">
+					<input class="uk-input" type="text" placeholder="Prompt Text" v-model="editorPrompt.text"
+						   v-bind:disabled="!editing">
 				</div>
 				<div class="uk-margin">
-					<input class="uk-input" type="number" placeholder="Prompt ID" v-model="editorPrompt.id">
+					<input class="uk-input" type="number" placeholder="Prompt ID" v-model="editorPrompt.id"
+						   v-bind:disabled="!editing">
 				</div>
 				<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-					<label><input class="uk-checkbox" type="checkbox" v-model="editorPrompt.mature"> Mature</label>
+					<label><input class="uk-checkbox" type="checkbox" v-model="editorPrompt.mature"
+								  v-bind:disabled="!editing"> Mature</label>
 				</div>
 				<div class="uk-margin">
-					<button class="uk-button uk-button-default uk-align-right" v-on:click="stopEditing()">Save</button>
+					<button class="uk-button uk-button-default uk-align-right" v-on:click="stopEditing()"
+							v-bind:disabled="!editing">Save
+					</button>
 				</div>
 			</fieldset>
 		</li>
