@@ -72,7 +72,9 @@
 								</div>
 							</div>
 							<table class="uk-table uk-table-striped">
-								<caption>{{ item.questions.length }} prompts</caption>
+								<caption>{{ item.questions.length }} prompts <span
+										v-if="getNumFilteredQuestions(item) !== item.questions.length">({{ getNumFilteredQuestions(item) }} shown via filter)</span>
+								</caption>
 								<thead>
 								<tr>
 									<th>Prompt</th>
@@ -80,7 +82,7 @@
 								</tr>
 								</thead>
 								<tbody>
-								<tr v-for="(prompt, idx) in item.questions" v-bind:id="prompt.uuid"
+								<tr v-for="prompt in item.questions" v-bind:id="prompt.uuid"
 									v-if="prompt.prompt.search(promptFilter) !== -1 || !promptFilter">
 									<td>{{ prompt.prompt }}</td>
 									<td>
@@ -88,7 +90,7 @@
 											<li><a :uk-icon="'icon: file-edit'" title="Edit"
 												   v-on:click="startEditing(prompt)"></a></li>
 											<li><a :uk-icon="'icon: trash'" class="uk-text-danger"
-												   v-on:click="item.questions.splice(idx, 1)"
+												   v-on:click="deleteQuestion(item, prompt)"
 												   title="Delete"></a></li>
 										</ul>
 									</td>

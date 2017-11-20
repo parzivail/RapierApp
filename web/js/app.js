@@ -75,6 +75,21 @@ var tabs,
 				id: 0,
 				mature: false
 			},
+			getNumFilteredQuestions: function (item) {
+				var filter = this.promptFilter;
+				return item.questions.filter(function (a) {
+					return a.prompt.search(filter) !== -1 || !filter;
+				}).length
+			},
+			deleteQuestion: function (item, prompt) {
+				for (var i = 0; i < item.questions.length; i++) {
+					if (item.questions[i].uuid !== prompt.uuid)
+						continue;
+
+					item.questions.splice(i, 1);
+					return;
+				}
+			},
 			startEditing: function (prompt) {
 				this.editorPrompt.text = prompt.prompt;
 				this.editorPrompt.id = prompt.id;
