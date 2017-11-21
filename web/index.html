@@ -47,7 +47,7 @@
 										<div class="uk-form-controls">
 											<input class="uk-input" type="text" id="packname"
 												   v-bind:disabled="item.episodeId === 1223"
-												   v-bind:value="item.manifest.name"
+												   v-model="item.manifest.name"
 												   placeholder="Pack Name">
 										</div>
 									</div>
@@ -56,7 +56,7 @@
 										<div class="uk-form-controls">
 											<input class="uk-input" type="text" id="packid"
 												   v-bind:disabled="item.episodeId === 1223"
-												   v-bind:value="item.manifest.id"
+												   v-model="item.manifest.id"
 												   placeholder="Pack ID">
 										</div>
 									</div>
@@ -65,7 +65,7 @@
 										<div class="uk-form-controls">
 											<input class="uk-input" type="number"
 												   v-bind:disabled="item.episodeId === 1223" id="episodeid"
-												   v-bind:value="item.episodeId"
+												   v-model.number="item.episodeId"
 												   placeholder="Episode ID">
 										</div>
 									</div>
@@ -152,7 +152,7 @@
 						<label class="uk-form-label">Episode ID</label>
 						<div class="uk-form-controls">
 							<input class="uk-input" type="number"
-								   v-model="creator.episodeId"
+								   v-model.number="creator.episodeId"
 								   placeholder="Episode ID">
 						</div>
 					</div>
@@ -211,13 +211,6 @@
 							<textarea class="uk-textarea" placeholder="Keyword (Joke) Triggers"
 									  v-model="editorPrompt.jet.keywords"
 									  v-bind:disabled="!editing || !editorPrompt.jet.hasJokeAudio"></textarea>
-						</div>
-					</div>
-					<div class="uk-margin">
-						<label class="uk-form-label">Prompt ID</label>
-						<div class="uk-form-controls">
-							<input class="uk-input" type="number" placeholder="Prompt ID" v-model="editorPrompt.id"
-								   v-bind:disabled="!editing">
 						</div>
 					</div>
 					<div class="uk-margin">

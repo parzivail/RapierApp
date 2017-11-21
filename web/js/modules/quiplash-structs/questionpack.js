@@ -17,7 +17,7 @@ var QuestionPack = function (content, manifest, contentPath) {
 
 		var dataJetPath = path.join(contentPath, "Question", "" + this.questions[i].id, 'data.jet');
 		if (!fs.existsSync(dataJetPath))
-			console.err("Failed to load JET for", dataJetPath);
+			console.error("Failed to load JET for", dataJetPath);
 		else
 			this.questions[i].jet = this.unJet(JSON.parse(
 				fs.readFileSync(dataJetPath)
@@ -66,7 +66,7 @@ QuestionPack.prototype.unJet = function (jet) {
 		else if (jet[i].n === "PromptAudio")
 			obj.promptAudio = this.jetValue(jet[i]);
 		else
-			console.err("Unsupported JET question manifest key:", jet[i].n);
+			console.error("Unsupported JET question manifest key:", jet[i].n);
 	}
 
 	return obj;
@@ -144,16 +144,16 @@ QuestionPack.prototype.save = function () {
 			}]
 		};
 
-		/*
-		 var silencePath = path.resolve(__dirname, './data/silence.mp3'),
-		 voPath = path.join(thisFolder, this.questions[i].jet.promptAudio + ".mp3"),
-		 jokePath = path.join(thisFolder, this.questions[i].jet.keywordResponseAudio + ".mp3");
 
-		 if (!fs.existsSync(voPath))
-		 fs.copySync(silencePath, voPath);
-		 if (!fs.existsSync(jokePath))
-		 fs.copySync(silencePath, jokePath);
-		 */
+		var silencePath = path.resolve(__dirname, './data/silence.mp3'),
+			voPath = path.join(thisFolder, this.questions[i].jet.promptAudio + ".mp3"),
+			jokePath = path.join(thisFolder, this.questions[i].jet.keywordResponseAudio + ".mp3");
+
+		if (!fs.existsSync(voPath))
+			fsextra.copySync(silencePath, voPath);
+		if (!fs.existsSync(jokePath))
+			fsextra.copySync(silencePath, jokePath);
+
 
 		// Save the JET
 		var jetPath = path.join(thisFolder, "data.jet");

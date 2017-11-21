@@ -4,6 +4,7 @@
 const nconf = require('nconf'),
 	fs = require('fs'),
 	path = require('path'),
+	uuid = require('uuid/v4'),
 	rq = require('electron-require'),
 	temp = rq.set('local', './web/js/modules'),
 	fileutils = rq.local('./fileutils'),
@@ -100,7 +101,28 @@ var tabs,
 				}).length
 			},
 			addQuestion: function (item) {
-				// TODO
+				var prompt = "New Question Prompt";
+
+				var newJet = {
+					hasJokeAudio: false,
+					keywords: [],
+					author: "",
+					keywordResponseText: "",
+					promptText: prompt,
+					location: "",
+					keywordResponseAudio: "joke",
+					promptAudio: "vo"
+				};
+
+				var newQuestion = {
+					id: Math.round(Math.random() * 100000) + 40000,
+					jet: newJet,
+					prompt: prompt,
+					uuid: uuid(),
+					x: false
+				};
+
+				item.questions.push(newQuestion);
 			},
 			addBulkQuestions: function (item) {
 				// TODO
@@ -133,11 +155,11 @@ var tabs,
 							this.loadedDlc[dlc].questions.splice(i, 1, {
 								prompt: this.editorPrompt.text,
 								x: this.editorPrompt.mature,
+								id: this.loadedDlc[dlc].questions[i].id,
 								jet: this.editorPrompt.jet
 							});
 							this.editing = false;
 							this.editorPrompt.text = null;
-							this.editorPrompt.id = null;
 							this.editorPrompt.mature = null;
 						}
 			},
