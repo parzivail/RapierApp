@@ -11,8 +11,7 @@ var jsonfile = require('jsonfile'),
 module.exports = {
 	loadDlcPath: function (dlcpath) {
 		var manifestPath = path.join(dlcpath, 'manifest.jet'),
-			questionPath = path.join(dlcpath, 'Question.jet'),
-			contentPath = path.join(dlcpath, 'Question');
+			questionPath = path.join(dlcpath, 'Question.jet');
 
 		if (!fs.existsSync(manifestPath))
 			return null;
@@ -28,7 +27,7 @@ module.exports = {
 		var questions = jsonfile.readFileSync(questionPath);
 		if (!questions)
 			return null;
-		questions = new QuestionPack(questions, manifest, contentPath);
+		questions = new QuestionPack(questions, manifest, dlcpath);
 		if (!manifest.validate())
 			return null;
 

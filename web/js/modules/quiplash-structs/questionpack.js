@@ -14,13 +14,13 @@ var QuestionPack = function (content, manifest, contentPath) {
 	for (var i = 0; i < this.questions.length; i++) {
 		this.questions[i].uuid = uuid();
 
-		var dataJetPath = path.join(contentPath, "" + this.questions[i].id, 'data.jet');
+		var dataJetPath = path.join(contentPath, "Question", "" + this.questions[i].id, 'data.jet');
 		if (!fs.existsSync(dataJetPath))
 			console.err("Failed to load JET for", dataJetPath);
 		else
 			this.questions[i].jet = this.unJet(JSON.parse(
 				fs.readFileSync(dataJetPath)
-			));
+			).fields);
 	}
 };
 
@@ -33,13 +33,25 @@ QuestionPack.prototype.jetValue = function (jetObj) {
 };
 
 QuestionPack.prototype.unJet = function (jet) {
-	var obj = {};
+	var obj = {
+		hasJokeAudio: false,
+		keywords: [],
+		author: "",
+		keywordResponseText: "",
+		promptText: "",
+		location: "",
+		keywordResponseAudio: "",
+		promptAudio: ""
+	};
 
 	for (var i = 0; i < jet.length; i++) {
 		if (jet[i].n === "HasJokeAudio")
 			obj.hasJokeAudio = this.jetValue(jet[i]);
-		else if (jet[i].n === "Keywords")
-			obj.keywords = this.jetValue(jet[i]).split('|');
+		else if (jet[i].n === "Keywords") {
+			var v = this.jetValue(jet[i]);
+			if (!!v)
+				obj.keywords = v.split('|');
+		}
 		else if (jet[i].n === "Author")
 			obj.author = this.jetValue(jet[i]);
 		else if (jet[i].n === "KeywordResponseText")
@@ -72,15 +84,15 @@ QuestionPack.prototype.save = function () {
 		content: []
 	};
 
-	var questionFolder = path.join(this.contentPath, "Question");
+	var questionFolder = path.join(this.contentPath, "TestQuestion");
 	if (!fs.existsSync(questionFolder))
-		fs.mkdir(questionFolder);
+		fs.mkdirSync(questionFolder);
 
 	for (var i = 0; i < this.questions.length; i++) {
 		// Setup this folder
 		var thisFolder = path.join(questionFolder, this.questions[i].id + "");
 		if (!fs.existsSync(thisFolder))
-			fs.mkdir(thisFolder);
+			fs.mkdirSync(thisFolder);
 
 		// Prune anything we don't need to save
 		var questionContent = {
@@ -129,9 +141,10 @@ QuestionPack.prototype.save = function () {
 
 		// Save the JET
 		var jetPath = path.join(thisFolder, "data.jet");
+		var self = this;
 		fs.writeFile(jetPath, JSON.stringify(dataJet), function (err) {
 			if (err)
-				console.log("Couldn't save JET for episode", this.episodeId, "question", this.questions[i].id, "- error:", err);
+				console.log("Couldn't save JET for episode", self.episodeId, "question", self.questions[i].id, "- error:", err);
 		})
 	}
 

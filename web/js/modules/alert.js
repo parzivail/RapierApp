@@ -26,10 +26,8 @@ module.exports = {
 			showCancelButton: true,
 			confirmButtonText: 'Yes',
 			cancelButtonText: 'No'
-		}).then(function (result) {
-			cb(result.value);
-		}).catch(function () {
-			cb(false);
-		});
+		})
+			.then(cb)
+			.catch(cb);
 	}
 };
