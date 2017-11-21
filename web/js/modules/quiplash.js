@@ -32,5 +32,13 @@ module.exports = {
 			return null;
 
 		return questions;
+	},
+	createNewDlc: function (dlcName, dlcId, episodeId) {
+		var proposedPath = "";
+
+		var manifest = new Manifest(dlcId, dlcName, ["Question"], proposedPath);
+		var questions = new QuestionPack([], manifest, proposedPath);
+
+		return questions;
 	}
 };

@@ -70,6 +70,11 @@ var tabs,
 			appLoaded: false,
 			editing: false,
 			promptFilter: "",
+			creator: {
+				name: "",
+				packId: "",
+				episodeId: null
+			},
 			editorPrompt: {
 				text: "",
 				id: null,
@@ -87,6 +92,12 @@ var tabs,
 				return item.questions.filter(function (a) {
 					return a.prompt.search(filter) !== -1 || !filter;
 				}).length
+			},
+			addQuestion: function (item) {
+				// TODO
+			},
+			addBulkQuestions: function (item) {
+				// TODO
 			},
 			deleteQuestion: function (item, prompt) {
 				for (var i = 0; i < item.questions.length; i++) {
@@ -123,6 +134,9 @@ var tabs,
 							this.editorPrompt.id = null;
 							this.editorPrompt.mature = null;
 						}
+			},
+			createDlc: function () {
+				// TODO
 			},
 			saveDlc: function (dlc) {
 				alert.confirm("Are you sure you want to save \"" + dlc.manifest.name + "\"? This will overwrite the current content.", function (shouldSave) {

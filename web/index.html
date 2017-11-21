@@ -12,11 +12,11 @@
 <body>
 <div id="rapier">
 	<ul class="uk-flex-center uk-background-muted" id="nav" uk-tab="animation: uk-animation-fade;">
-		<li><a>Home</a></li>
-		<li><a>Manage DLC</a></li>
-		<li><a>Create DLC</a></li>
+		<li><a>Getting Started</a></li>
+		<li><a>Manage Packs</a></li>
+		<li><a>Create Pack</a></li>
 		<li><a>Prompt Editor</a></li>
-		<li><a>Setup</a></li>
+		<li><a>Rapier Setup</a></li>
 	</ul>
 	<ul class="uk-switcher uk-padding" id="pages">
 		<li>
@@ -79,6 +79,12 @@
 													v-bind:disabled="item.episodeId === 1223"
 													v-on:click="deleteDlc(item)">Delete Pack
 											</button>
+											<button class="uk-button uk-button-default"
+													v-on:click="addQuestion(item)">Add Question
+											</button>
+											<button class="uk-button uk-button-default"
+													v-on:click="addBulkQuestions(item)">Bulk Add Questions
+											</button>
 										</div>
 									</div>
 									<div class="uk-margin">
@@ -123,8 +129,39 @@
 			</div>
 		</li>
 		<li>
-			Create
-			<!-- TODO -->
+			<div class="uk-fieldset">
+				<div class="uk-legend">Pack Creator</div>
+				<div class="uk-form-horizontal">
+					<div class="uk-margin">
+						<label class="uk-form-label">Pack Name</label>
+						<div class="uk-form-controls">
+							<input class="uk-input" type="text"
+								   v-bind:value="creator.name"
+								   placeholder="Pack Name">
+						</div>
+					</div>
+					<div class="uk-margin">
+						<label class="uk-form-label">Pack ID</label>
+						<div class="uk-form-controls">
+							<input class="uk-input" type="text"
+								   v-bind:value="creator.packId"
+								   placeholder="Pack ID">
+						</div>
+					</div>
+					<div class="uk-margin">
+						<label class="uk-form-label">Episode ID</label>
+						<div class="uk-form-controls">
+							<input class="uk-input" type="number"
+								   v-bind:value="creator.episodeId"
+								   placeholder="Episode ID">
+						</div>
+					</div>
+				</div>
+				<div class="uk-margin">
+					<button class="uk-button uk-button-default uk-align-right" v-on:click="createDlc()">Create
+					</button>
+				</div>
+			</div>
 		</li>
 		<li>
 			<fieldset class="uk-fieldset">
