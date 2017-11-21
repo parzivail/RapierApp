@@ -72,6 +72,10 @@ QuestionPack.prototype.unJet = function (jet) {
 };
 
 QuestionPack.prototype.save = function () {
+	if (!fs.existsSync(this.contentPath))
+		fs.mkdirSync(this.contentPath);
+
+	var self = this;
 
 	var newManifest = {
 		id: this.manifest.id,
@@ -141,12 +145,23 @@ QuestionPack.prototype.save = function () {
 
 		// Save the JET
 		var jetPath = path.join(thisFolder, "data.jet");
-		var self = this;
 		fs.writeFile(jetPath, JSON.stringify(dataJet), function (err) {
 			if (err)
 				console.log("Couldn't save JET for episode", self.episodeId, "question", self.questions[i].id, "- error:", err);
-		})
+		});
 	}
+
+	var manifestPath = path.join(this.contentPath, "manifest.jet");
+	fs.writeFile(manifestPath, JSON.stringify(newManifest), function (err) {
+		if (err)
+			console.log("Couldn't save manifest JET for episode", self.episodeId, "- error:", err);
+	});
+
+	var contentJetPath = path.join(this.contentPath, "Question.jet");
+	fs.writeFile(contentJetPath, JSON.stringify(newContent), function (err) {
+		if (err)
+			console.log("Couldn't save content JET for episode", self.episodeId, "- error:", err);
+	});
 
 	/*
 	 ``create folder {name = "Question"}

@@ -128,23 +128,66 @@
 		</li>
 		<li>
 			<fieldset class="uk-fieldset">
-				<legend class="uk-legend">Prompt Editor</legend>
-				<div class="uk-margin">
-					<input class="uk-input" type="text" placeholder="Prompt Text" v-model="editorPrompt.text"
-						   v-bind:disabled="!editing">
-				</div>
-				<div class="uk-margin">
-					<input class="uk-input" type="number" placeholder="Prompt ID" v-model="editorPrompt.id"
-						   v-bind:disabled="!editing">
-				</div>
-				<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
-					<label><input class="uk-checkbox" type="checkbox" v-model="editorPrompt.mature"
-								  v-bind:disabled="!editing"> Mature</label>
-				</div>
-				<div class="uk-margin">
-					<button class="uk-button uk-button-default uk-align-right" v-on:click="stopEditing()"
-							v-bind:disabled="!editing">Save
-					</button>
+				<div class="uk-form-horizontal">
+					<legend class="uk-legend">Prompt Editor</legend>
+					<div class="uk-margin">
+						<label class="uk-form-label">Prompt Text</label>
+						<div class="uk-form-controls">
+							<input class="uk-input" type="text" placeholder="Prompt Text" v-model="editorPrompt.text"
+								   v-bind:disabled="!editing">
+						</div>
+					</div>
+					<div class="uk-margin">
+						<label class="uk-form-label">Prompt Author</label>
+						<div class="uk-form-controls">
+							<input class="uk-input" type="text" placeholder="Author" v-model="editorPrompt.jet.author"
+								   v-bind:disabled="!editing">
+						</div>
+					</div>
+					<div class="uk-margin">
+						<label class="uk-form-label">Author Location</label>
+						<div class="uk-form-controls">
+							<input class="uk-input" type="text" placeholder="Location"
+								   v-model="editorPrompt.jet.location"
+								   v-bind:disabled="!editing">
+						</div>
+					</div>
+					<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+						<label><input class="uk-checkbox" type="checkbox" v-model="editorPrompt.mature"
+									  v-bind:disabled="!editing"> NSFW</label>
+					</div>
+					<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
+						<label><input class="uk-checkbox" type="checkbox" v-model="editorPrompt.jet.hasJokeAudio"
+									  v-bind:disabled="!editing"> Has Joke</label>
+					</div>
+					<div class="uk-margin">
+						<label class="uk-form-label">Keyword Response (Joke) Text</label>
+						<div class="uk-form-controls">
+							<input class="uk-input" type="text" placeholder="Keyword Response (Joke) Text"
+								   v-model="editorPrompt.jet.keywordResponseText"
+								   v-bind:disabled="!editing || !editorPrompt.jet.hasJokeAudio">
+						</div>
+					</div>
+					<div class="uk-margin">
+						<label class="uk-form-label">Keyword Response (Joke) Triggers (one per line)</label>
+						<div class="uk-form-controls">
+							<textarea class="uk-textarea" placeholder="Keyword (Joke) Triggers"
+									  v-model="editorPrompt.jet.keywords"
+									  v-bind:disabled="!editing || !editorPrompt.jet.hasJokeAudio"></textarea>
+						</div>
+					</div>
+					<div class="uk-margin">
+						<label class="uk-form-label">Prompt ID</label>
+						<div class="uk-form-controls">
+							<input class="uk-input" type="number" placeholder="Prompt ID" v-model="editorPrompt.id"
+								   v-bind:disabled="!editing">
+						</div>
+					</div>
+					<div class="uk-margin">
+						<button class="uk-button uk-button-default uk-align-right" v-on:click="stopEditing()"
+								v-bind:disabled="!editing">Save
+						</button>
+					</div>
 				</div>
 			</fieldset>
 		</li>

@@ -72,8 +72,15 @@ var tabs,
 			promptFilter: "",
 			editorPrompt: {
 				text: "",
-				id: 0,
-				mature: false
+				id: null,
+				mature: false,
+				jet: {
+					author: "",
+					location: "",
+					hasJokeAudio: false,
+					keywords: "",
+					keywordResponseText: ""
+				}
 			},
 			getNumFilteredQuestions: function (item) {
 				var filter = this.promptFilter;
@@ -95,6 +102,8 @@ var tabs,
 				this.editorPrompt.id = prompt.id;
 				this.editorPrompt.mature = prompt.x;
 				this.editorPrompt.uuid = prompt.uuid;
+				this.editorPrompt.jet = prompt.jet;
+				this.editorPrompt.jet.keywords = prompt.jet.keywords.join("\n");
 				this.editing = true;
 				tabs.show(3);
 			},
@@ -103,11 +112,12 @@ var tabs,
 				for (var dlc = 0; dlc < this.loadedDlc.length; dlc++)
 					for (var i = 0; i < this.loadedDlc[dlc].questions.length; i++)
 						if (this.loadedDlc[dlc].questions[i].uuid === this.editorPrompt.uuid) {
+							this.editorPrompt.jet.keywords = this.editorPrompt.jet.keywords.split("\n");
 							this.loadedDlc[dlc].questions.splice(i, 1, {
 								prompt: this.editorPrompt.text,
-								x: this.editorPrompt.mature
+								x: this.editorPrompt.mature,
+								jet: this.editorPrompt.jet
 							});
-							tabs.show(1);
 							this.editing = false;
 							this.editorPrompt.text = null;
 							this.editorPrompt.id = null;
