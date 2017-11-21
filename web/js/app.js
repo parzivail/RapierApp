@@ -122,7 +122,8 @@ var tabs,
 					x: false
 				};
 
-				item.questions.push(newQuestion);
+				item.questions.unshift(newQuestion);
+				this.startEditing(newQuestion);
 			},
 			addBulkQuestions: function (item) {
 				// TODO

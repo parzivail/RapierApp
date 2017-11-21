@@ -89,7 +89,7 @@ QuestionPack.prototype.save = function () {
 		content: []
 	};
 
-	var questionFolder = path.join(this.contentPath, "TestQuestion");
+	var questionFolder = path.join(this.contentPath, "Question");
 	if (!fs.existsSync(questionFolder))
 		fs.mkdirSync(questionFolder);
 
