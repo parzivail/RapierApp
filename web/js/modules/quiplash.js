@@ -33,8 +33,8 @@ module.exports = {
 
 		return questions;
 	},
-	createNewDlc: function (dlcName, dlcId, episodeId) {
-		var proposedPath = "";
+	createNewDlc: function (dlcName, dlcId, episodeId, dlcContainerFolder) {
+		var proposedPath = path.join(dlcContainerFolder, dlcId);
 
 		var manifest = new Manifest(dlcId, dlcName, ["Question"], proposedPath);
 		var questions = new QuestionPack([], manifest, proposedPath);
