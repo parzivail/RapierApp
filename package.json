@@ -12,6 +12,7 @@
   "dependencies": {
     "dotenv": "4.0.0",
 	"electron-require": "0.3.0",
+	"fs-extra": "4.0.2",
 	"jsonfile": "4.0.0",
 	"nconf": "0.9.1",
 	"uuid": "3.1.0",

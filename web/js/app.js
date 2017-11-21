@@ -57,6 +57,12 @@ function onQuiplashPathChange(newPath) {
 	app.appLoaded = true;
 }
 
+function refreshDlc() {
+	UIkit.tab("#tabDlc", {
+		connect: "#component-nav"
+	});
+}
+
 /*
  * Vue App
  */
@@ -136,11 +142,16 @@ var tabs,
 						}
 			},
 			createDlc: function () {
-				var quipDir = fileutils.isValidQuiplash(app.quipPath);
+				var quipDir = fileutils.isValidQuiplash(this.quipPath);
 				var dlcDir = path.join(quipDir, 'DLC');
-				var newDlc = quiplash.createDlc(app.creator.name, app.creator.id, app.creator.episodeId, dlcDir);
-				app.loadedDlc.push(newDlc);
-				alert.info("Your new DLC has been created. Keep in mind that the DLC <b>will not</b> be saved until you click <i>Save</i>");
+				var newDlc = quiplash.createNewDlc(this.creator.name, this.creator.packId, this.creator.episodeId, dlcDir);
+				this.loadedDlc.push(newDlc);
+				refreshDlc();
+				alert.info("Your new DLC has been created. Keep in mind that the DLC WILL NOT be saved until you click <i>Save</i>");
+				tabs.show(1);
+				this.creator.name = "";
+				this.creator.packId = "";
+				this.creator.episodeId = null;
 			},
 			saveDlc: function (dlc) {
 				alert.confirm("Are you sure you want to save \"" + dlc.manifest.name + "\"? This will overwrite the current content.", function (shouldSave) {
@@ -164,9 +175,7 @@ var tabs,
 
 onQuiplashPathChange(nconf.get('quiplash:path'));
 
-UIkit.tab("#tabDlc", {
-	connect: "#component-nav"
-});
+refreshDlc();
 
 tabs = UIkit.tab("#nav", {
 	connect: "#pages"

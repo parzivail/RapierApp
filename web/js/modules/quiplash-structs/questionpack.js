@@ -3,6 +3,7 @@
  */
 var uuid = require('uuid/v4'),
 	fs = require('fs'),
+	fsextra = require('fs-extra'),
 	path = require('path');
 
 var QuestionPack = function (content, manifest, contentPath) {
@@ -142,6 +143,17 @@ QuestionPack.prototype.save = function () {
 				n: "PromptAudio"
 			}]
 		};
+
+		/*
+		 var silencePath = path.resolve(__dirname, './data/silence.mp3'),
+		 voPath = path.join(thisFolder, this.questions[i].jet.promptAudio + ".mp3"),
+		 jokePath = path.join(thisFolder, this.questions[i].jet.keywordResponseAudio + ".mp3");
+
+		 if (!fs.existsSync(voPath))
+		 fs.copySync(silencePath, voPath);
+		 if (!fs.existsSync(jokePath))
+		 fs.copySync(silencePath, jokePath);
+		 */
 
 		// Save the JET
 		var jetPath = path.join(thisFolder, "data.jet");
