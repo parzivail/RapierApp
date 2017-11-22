@@ -11,30 +11,29 @@
 </head>
 <body>
 <div id="rapier">
-	<ul class="uk-flex-center uk-background-muted" id="nav" uk-tab="animation: uk-animation-fade;">
+	<ul class="uk-child-width-expand uk-background-muted squish" id="nav" uk-tab="animation: uk-animation-fade;">
 		<li><a>Getting Started</a></li>
 		<li><a>Manage Packs</a></li>
 		<li><a>Create Pack</a></li>
 		<li><a>Prompt Editor</a></li>
 		<li><a>Rapier Setup</a></li>
 	</ul>
-	<ul class="uk-switcher uk-padding" id="pages">
+	<ul class="uk-switcher uk-padding squish" id="pages">
 		<li>
-			Quick Links
-			<!-- TODO: move -->
+			<h3 class="uk-heading-line uk-text-center"><span>Quick Import</span></h3>
 			<div class="uk-margin">
-				<div class="uk-form-controls">
-					<div class="js-upload" uk-form-custom id="contentpack">
-						<input type="file" id="fileContentpack">
-						<button class="uk-button uk-button-default" type="button">Import Content Pack</button>
-					</div>
+				<div class="js-upload uk-width-1-1" uk-form-custom id="contentpack">
+					<input type="file" id="fileContentpack">
+					<button class="uk-button uk-button-default uk-width-1-1" type="button">Import Content Pack</button>
 				</div>
 			</div>
+			<h3 class="uk-heading-line uk-text-center"><span>Tutorial</span></h3>
 		</li>
 		<li>
 			<div v-if="!appLoaded">
 				<vue-simple-spinner></vue-simple-spinner>
 			</div>
+			<h3 class="uk-heading-line uk-text-center"><span>Pack Editor</span></h3>
 			<div uk-grid>
 				<div class="uk-width-small">
 					<ul class="uk-nav uk-nav-default uk-tab-left"
@@ -72,7 +71,6 @@
 								</div>
 							</div>
 							<div class="uk-fieldset">
-								<div class="uk-legend">Pack Editor</div>
 								<div class="uk-form-horizontal">
 									<div class="uk-margin">
 										<label class="uk-form-label" for="packname">Pack Name</label>
@@ -114,12 +112,14 @@
 													v-bind:disabled="item.episodeId === 1223"
 													v-on:click="deleteDlc(item)">Delete
 											</button>
-											<button class="uk-button uk-button-default"
-													v-on:click="addQuestion(item)">Add Question
-											</button>
-											<a class="uk-button uk-button-default"
-											   v-bind:href="'#modal-bulkadd' + idx" uk-toggle>Bulk Add
-											</a>
+											<div class="uk-button-group">
+												<button class="uk-button uk-button-default"
+														v-on:click="addQuestion(item)">Add Question
+												</button>
+												<a class="uk-button uk-button-default"
+												   v-bind:href="'#modal-bulkadd' + idx" uk-toggle>Bulk
+												</a>
+											</div>
 										</div>
 									</div>
 									<div class="uk-margin">
@@ -165,7 +165,7 @@
 		</li>
 		<li>
 			<div class="uk-fieldset">
-				<div class="uk-legend">Pack Creator</div>
+				<h3 class="uk-heading-line uk-text-center"><span>Pack Creator</span></h3>
 				<div class="uk-form-horizontal">
 					<div class="uk-margin">
 						<label class="uk-form-label">Pack Name</label>
@@ -201,7 +201,7 @@
 		<li>
 			<fieldset class="uk-fieldset">
 				<div class="uk-form-horizontal">
-					<legend class="uk-legend">Prompt Editor</legend>
+					<h3 class="uk-heading-line uk-text-center"><span>Prompt Editor</span></h3>
 					<div class="uk-margin">
 						<label class="uk-form-label">Prompt Text</label>
 						<div class="uk-form-controls">
@@ -257,6 +257,7 @@
 			</fieldset>
 		</li>
 		<li>
+			<h3 class="uk-heading-line uk-text-center"><span>Setup</span></h3>
 			<div class="uk-form-horizontal">
 				<div class="uk-margin uk-align-right">
 					<label class="uk-form-label" for="qppick">
