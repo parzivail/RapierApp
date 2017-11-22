@@ -16,6 +16,13 @@ module.exports = {
 			html: message
 		})
 	},
+	success: function (message) {
+		swal({
+			title: 'Success',
+			type: 'success',
+			html: message
+		})
+	},
 	confirm: function (message, cb, reverseFocus) {
 		swal({
 			title: 'Confirm',

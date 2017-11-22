@@ -20,8 +20,16 @@
 	</ul>
 	<ul class="uk-switcher uk-padding" id="pages">
 		<li>
-			Home
-			<!-- TODO -->
+			Quick Links
+			<!-- TODO: move -->
+			<div class="uk-margin">
+				<div class="uk-form-controls">
+					<div class="js-upload" uk-form-custom id="contentpack">
+						<input type="file" id="fileContentpack">
+						<button class="uk-button uk-button-default" type="button">Import Content Pack</button>
+					</div>
+				</div>
+			</div>
 		</li>
 		<li>
 			<div v-if="!appLoaded">
@@ -38,7 +46,31 @@
 				</div>
 				<div class="uk-width-expand">
 					<ul id="component-nav" class="uk-switcher">
-						<li v-for="item in loadedDlc" v-bind:key="item.id">
+						<li v-for="(item, idx) in loadedDlc" v-bind:key="item.id">
+							<div v-bind:id="'modal-bulkadd' + idx" class="uk-modal-container" uk-modal>
+								<div class="uk-modal-dialog">
+									<div class="uk-modal-header">
+										<h2 class="uk-modal-title">Bulk Add Prompts</h2>
+									</div>
+									<div class="uk-modal-body" uk-overflow-auto>
+										<div class="uk-margin">
+											<label class="uk-form-label">Prompts (one per line)</label>
+											<div class="uk-form-controls">
+							<textarea class="uk-textarea" placeholder="Prompts"
+									  v-model="bulkAddPrompts" rows="20"></textarea>
+											</div>
+										</div>
+									</div>
+									<div class="uk-modal-footer uk-text-right">
+										<button class="uk-button uk-button-default uk-modal-close" type="button">
+											Cancel
+										</button>
+										<button class="uk-button uk-button-primary uk-modal-close" type="button"
+												v-on:click="addBulkQuestions(item)">Create
+										</button>
+									</div>
+								</div>
+							</div>
 							<div class="uk-fieldset">
 								<div class="uk-legend">Pack Editor</div>
 								<div class="uk-form-horizontal">
@@ -73,18 +105,21 @@
 										<label class="uk-form-label" for="savedlc">Actions</label>
 										<div class="uk-form-controls">
 											<button class="uk-button uk-button-default"
-													v-on:click="saveDlc(item)" id="savedlc">Save Pack
+													v-on:click="saveDlc(item)" id="savedlc">Save
+											</button>
+											<button class="uk-button uk-button-default"
+													v-on:click="exportDlc(item)" id="exportdlc">Export
 											</button>
 											<button class="uk-button uk-button-danger"
 													v-bind:disabled="item.episodeId === 1223"
-													v-on:click="deleteDlc(item)">Delete Pack
+													v-on:click="deleteDlc(item)">Delete
 											</button>
 											<button class="uk-button uk-button-default"
 													v-on:click="addQuestion(item)">Add Question
 											</button>
-											<button class="uk-button uk-button-default"
-													v-on:click="addBulkQuestions(item)">Bulk Add Questions
-											</button>
+											<a class="uk-button uk-button-default"
+											   v-bind:href="'#modal-bulkadd' + idx" uk-toggle>Bulk Add
+											</a>
 										</div>
 									</div>
 									<div class="uk-margin">
@@ -230,7 +265,7 @@
 					<div class="uk-form-controls">
 						<div class="js-upload" uk-form-custom id="qppick">
 							<input type="file" id="fileQuiplash">
-							<button class="uk-button uk-button-default" type="button" tabindex="-1">Select</button>
+							<button class="uk-button uk-button-default" type="button">Select</button>
 						</div>
 					</div>
 				</div>

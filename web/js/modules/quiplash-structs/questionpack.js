@@ -4,6 +4,8 @@
 var uuid = require('uuid/v4'),
 	fs = require('fs'),
 	fsextra = require('fs-extra'),
+	zipFolder = require("zip-folder"),
+	rimraf = require('rimraf').sync,
 	path = require('path');
 
 var QuestionPack = function (content, manifest, contentPath) {
@@ -188,7 +190,13 @@ QuestionPack.prototype.save = function () {
 };
 
 QuestionPack.prototype.delete = function () {
-	// TODO
+	rimraf(this.contentPath);
+};
+
+QuestionPack.prototype.export = function (exportPath) {
+	zipFolder(this.contentPath, exportPath, function () {
+		console.log("Exported pack as", exportPath);
+	});
 };
 
 module.exports = QuestionPack;

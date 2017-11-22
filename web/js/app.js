@@ -5,6 +5,8 @@ const nconf = require('nconf'),
 	fs = require('fs'),
 	path = require('path'),
 	uuid = require('uuid/v4'),
+	extract = require('extract-zip'),
+	dialog = require('electron').remote.dialog,
 	rq = require('electron-require'),
 	temp = rq.set('local', './web/js/modules'),
 	fileutils = rq.local('./fileutils'),
@@ -82,6 +84,7 @@ var tabs,
 				packId: "",
 				episodeId: null
 			},
+			bulkAddPrompts: "",
 			editorPrompt: {
 				text: "",
 				id: null,
@@ -126,7 +129,32 @@ var tabs,
 				this.startEditing(newQuestion);
 			},
 			addBulkQuestions: function (item) {
-				// TODO
+				var newPrompts = this.bulkAddPrompts.split("\n");
+
+				for (var i = 0; i < newPrompts.length; i++) {
+					var prompt = newPrompts[i];
+
+					var newJet = {
+						hasJokeAudio: false,
+						keywords: [],
+						author: "",
+						keywordResponseText: "",
+						promptText: prompt,
+						location: "",
+						keywordResponseAudio: "joke",
+						promptAudio: "vo"
+					};
+
+					var newQuestion = {
+						id: Math.round(Math.random() * 100000) + 40000,
+						jet: newJet,
+						prompt: prompt,
+						uuid: uuid(),
+						x: false
+					};
+
+					item.questions.unshift(newQuestion);
+				}
 			},
 			deleteQuestion: function (item, prompt) {
 				for (var i = 0; i < item.questions.length; i++) {
@@ -164,6 +192,20 @@ var tabs,
 							this.editorPrompt.mature = null;
 						}
 			},
+			loadContentPack: function (contentpack) {
+				if (app.isQuiplashPathInvalid) {
+					alert.info("You must select your Quiplash executable first.");
+					return;
+				}
+
+				var quipDir = fileutils.isValidQuiplash(this.quipPath);
+				extract(contentpack, {dir: path.join(quipDir, 'DLC', path.basename(contentpack, path.extname(contentpack)))}, function (err) {
+					if (err)
+						alert.error("Failed to import content pack: " + err);
+					else
+						alert.success("Imported pack successfully.");
+				});
+			},
 			createDlc: function () {
 				var quipDir = fileutils.isValidQuiplash(this.quipPath);
 				var dlcDir = path.join(quipDir, 'DLC');
@@ -183,6 +225,19 @@ var tabs,
 					dlc.save();
 				})
 			},
+			exportDlc: function (dlc) {
+				dialog.showSaveDialog({
+					title: "Export DLC to...",
+					filters: [
+						{
+							name: "ZIP Archive",
+							extensions: ["zip"]
+						}
+					]
+				}, function (fileName) {
+					dlc.export(fileName);
+				});
+			},
 			deleteDlc: function (dlc) {
 				if (dlc.episodeId === 1223)
 					alert.info("You cannot delete the main content pack.");
@@ -191,6 +246,14 @@ var tabs,
 						if (!shouldDelete)
 							return;
 						dlc.delete();
+
+						for (var i = 0; i < app.loadedDlc.length; i++) {
+							if (app.loadedDlc[i].episodeId !== dlc.episodeId)
+								continue;
+
+							app.loadedDlc.splice(i, 1);
+							return;
+						}
 					}, true)
 			}
 		}
@@ -215,9 +278,16 @@ by.id("textQuiplash").onchange = function () {
 	onQuiplashPathChange();
 };
 
-UIkit.upload('.js-upload', {
+UIkit.upload('#qppick', {
 	beforeAll: function (e) {
 		onQuiplashPathChange(by.id("fileQuiplash").files[0].path);
+		return false;
+	}
+});
+
+UIkit.upload('#contentpack', {
+	beforeAll: function (e) {
+		app.loadContentPack(by.id("fileContentpack").files[0].path);
 		return false;
 	}
 });
