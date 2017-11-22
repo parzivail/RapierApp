@@ -18,7 +18,7 @@ module.exports = {
 		var manifest = jsonfile.readFileSync(manifestPath);
 		if (!manifest)
 			return null;
-		manifest = new Manifest(manifest.id, manifest.name, manifest.types, dlcpath);
+		manifest = new Manifest(manifest.id, manifest.name, manifest.types, manifest.metadata, dlcpath);
 		if (!manifest.validate())
 			return null;
 
@@ -33,9 +33,9 @@ module.exports = {
 
 		return questions;
 	},
-	createNewDlc: function (dlcName, dlcId, episodeId, dlcContainerFolder) {
+	createNewDlc: function (dlcName, dlcId, episodeId, metadata, dlcContainerFolder) {
 		var proposedPath = path.join(dlcContainerFolder, dlcId);
-		var manifest = new Manifest(dlcId, dlcName, ["Question"], proposedPath);
+		var manifest = new Manifest(dlcId, dlcName, ["Question"], metadata, proposedPath);
 		return new QuestionPack({content: [], episodeid: episodeId}, manifest, proposedPath);
 	}
 };

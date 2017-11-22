@@ -5,6 +5,8 @@ const nconf = require('nconf'),
 	fs = require('fs'),
 	path = require('path'),
 	uuid = require('uuid/v4'),
+	escape = require('escape-html'),
+	openurl = require('openurl'),
 	extract = require('extract-zip'),
 	dialog = require('electron').remote.dialog,
 	rq = require('electron-require'),
@@ -13,6 +15,35 @@ const nconf = require('nconf'),
 	by = rq.local('./by'),
 	quiplash = rq.local('./quiplash'),
 	alert = rq.local('./alert');
+
+/*
+ * Polyfill
+ */
+
+/**
+ * Calculate a 32 bit FNV-1a hash
+ * Found here: https://gist.github.com/vaiorabbit/5657561
+ * Ref.: http://isthe.com/chongo/tech/comp/fnv/
+ * Modified to fit Rapier use case
+ *
+ * @param str: the input value
+ * @param seed: the hash of the previous chunk
+ * @returns [integer]
+ */
+function hashFnv32a(str, seed) {
+	var i, l,
+		hval = seed;
+
+	for (i = 0, l = str.length; i < l; i++) {
+		hval ^= str.charCodeAt(i);
+		hval += (hval << 1) + (hval << 4) + (hval << 7) + (hval << 8) + (hval << 24);
+	}
+	return hval >>> 0;
+}
+
+String.prototype.hashCode = function () {
+	return hashFnv32a(this, 0xbadcafe)
+};
 
 /*
  * Config
@@ -72,9 +103,23 @@ function refreshDlc() {
 var tabs,
 	app = new Vue({
 		el: "#rapier",
+		computed: {
+			creatorEpisodeId: function () {
+				return this.creator.packId.hashCode();
+			},
+			editorPromptId: function () {
+				return this.editorPrompt.text.hashCode();
+			}
+		},
 		data: {
 			isQuiplashPathInvalid: false,
 			quipPath: nconf.get('quiplash:path'),
+			contentFilter: [
+				{
+					name: "Content Pack",
+					extensions: ["rap"]
+				}
+			],
 			loadedDlc: [],
 			appLoaded: false,
 			editing: false,
@@ -82,12 +127,15 @@ var tabs,
 			creator: {
 				name: "",
 				packId: "",
-				episodeId: null
+				metadata: {
+					author: "",
+					url: "",
+					description: ""
+				}
 			},
 			bulkAddPrompts: "",
 			editorPrompt: {
 				text: "",
-				id: null,
 				mature: false,
 				jet: {
 					author: "",
@@ -96,6 +144,12 @@ var tabs,
 					keywords: "",
 					keywordResponseText: ""
 				}
+			},
+			stripHtml: function (string) {
+				return escape(string);
+			},
+			openUrl: function (url) {
+				openurl.open(url);
 			},
 			switchToCreateTab: function () {
 				tabs.show(2);
@@ -149,14 +203,14 @@ var tabs,
 					};
 
 					var newQuestion = {
-						id: Math.round(Math.random() * 100000) + 40000,
+						id: prompt.hashCode(),
 						jet: newJet,
 						prompt: prompt,
 						uuid: uuid(),
 						x: false
 					};
 
-					item.questions.unshift(newQuestion);
+					item.questions.push(newQuestion);
 				}
 			},
 			deleteQuestion: function (item, prompt) {
@@ -170,7 +224,6 @@ var tabs,
 			},
 			startEditing: function (prompt) {
 				this.editorPrompt.text = prompt.prompt;
-				this.editorPrompt.id = prompt.id;
 				this.editorPrompt.mature = prompt.x;
 				this.editorPrompt.uuid = prompt.uuid;
 				this.editorPrompt.jet = prompt.jet;
@@ -187,7 +240,7 @@ var tabs,
 							this.loadedDlc[dlc].questions.splice(i, 1, {
 								prompt: this.editorPrompt.text,
 								x: this.editorPrompt.mature,
-								id: this.loadedDlc[dlc].questions[i].id,
+								id: this.editorPromptId,
 								jet: this.editorPrompt.jet
 							});
 							this.editing = false;
@@ -203,12 +256,7 @@ var tabs,
 
 				dialog.showOpenDialog({
 					title: "Import DLC from...",
-					filters: [
-						{
-							name: "ZIP Archive",
-							extensions: ["zip"]
-						}
-					]
+					filters: this.contentFilter
 				}, function (fileName) {
 					if (!fileName)
 						return;
@@ -225,14 +273,16 @@ var tabs,
 			createDlc: function () {
 				var quipDir = fileutils.isValidQuiplash(this.quipPath);
 				var dlcDir = path.join(quipDir, 'DLC');
-				var newDlc = quiplash.createNewDlc(this.creator.name, this.creator.packId, this.creator.episodeId, dlcDir);
+				var newDlc = quiplash.createNewDlc(this.creator.name, this.creator.packId, this.creatorEpisodeId, this.creator.metadata, dlcDir);
 				this.loadedDlc.push(newDlc);
 				refreshDlc();
 				alert.info("Your new DLC has been created. Keep in mind that the DLC WILL NOT be saved until you click <i>Save</i>");
 				tabs.show(1);
 				this.creator.name = "";
 				this.creator.packId = "";
-				this.creator.episodeId = null;
+				this.creator.metadata.author = "";
+				this.creator.metadata.description = "";
+				this.creator.metadata.url = "";
 			},
 			saveDlc: function (dlc) {
 				alert.confirm("Are you sure you want to save \"" + dlc.manifest.name + "\"? This will overwrite the current content.", function (shouldSave) {
@@ -244,12 +294,7 @@ var tabs,
 			exportDlc: function (dlc) {
 				dialog.showSaveDialog({
 					title: "Export DLC to...",
-					filters: [
-						{
-							name: "ZIP Archive",
-							extensions: ["zip"]
-						}
-					]
+					filters: this.contentFilter
 				}, function (fileName) {
 					if (!fileName)
 						return;

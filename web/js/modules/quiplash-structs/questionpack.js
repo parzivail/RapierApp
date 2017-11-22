@@ -83,7 +83,8 @@ QuestionPack.prototype.save = function () {
 	var newManifest = {
 		id: this.manifest.id,
 		name: this.manifest.name,
-		types: ["Question"]
+		types: ["Question"],
+		metadata: this.manifest.metadata
 	};
 
 	var newContent = {

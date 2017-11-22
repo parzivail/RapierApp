@@ -91,13 +91,15 @@
 												   placeholder="Pack ID">
 										</div>
 									</div>
-									<div class="uk-margin">
-										<label class="uk-form-label" for="episodeid">Episode ID</label>
+									<div class="uk-margin" v-if="item.manifest.metadata.hasMetadata">
+										<label class="uk-form-label">Metadata</label>
 										<div class="uk-form-controls">
-											<input class="uk-input" type="number"
-												   v-bind:disabled="item.episodeId === 1223" id="episodeid"
-												   v-model.number="item.episodeId"
-												   placeholder="Episode ID">
+											<ul class="uk-list uk-list-divider">
+												<li>Author: {{stripHtml(item.manifest.metadata.author)}}</li>
+												<li>URL: <a v-on:click="openUrl(item.manifest.metadata.url)">{{stripHtml(item.manifest.metadata.url)}}</a>
+												</li>
+												<li>Description: {{stripHtml(item.manifest.metadata.description)}}</li>
+											</ul>
 										</div>
 									</div>
 									<div class="uk-margin">
@@ -173,7 +175,15 @@
 						<div class="uk-form-controls">
 							<input class="uk-input" type="text"
 								   v-model="creator.name"
-								   placeholder="Pack Name">
+								   placeholder="e.g. Ghostbusters Pack">
+						</div>
+					</div>
+					<div class="uk-margin">
+						<label class="uk-form-label">Pack Author</label>
+						<div class="uk-form-controls">
+							<input class="uk-input" type="text"
+								   v-model="creator.metadata.author"
+								   placeholder="e.g. John Smith">
 						</div>
 					</div>
 					<div class="uk-margin">
@@ -181,15 +191,23 @@
 						<div class="uk-form-controls">
 							<input class="uk-input" type="text"
 								   v-model="creator.packId"
-								   placeholder="Pack ID">
+								   placeholder="e.g. johnsmith_ghostbusters">
 						</div>
 					</div>
 					<div class="uk-margin">
-						<label class="uk-form-label">Episode ID</label>
+						<label class="uk-form-label">Pack Description</label>
 						<div class="uk-form-controls">
-							<input class="uk-input" type="number"
-								   v-model.number="creator.episodeId"
-								   placeholder="Episode ID">
+							<input class="uk-input" type="text"
+								   v-model="creator.metadata.description"
+								   placeholder="e.g. Ghostbusters-themed prompts, based only on the first movie">
+						</div>
+					</div>
+					<div class="uk-margin">
+						<label class="uk-form-label">Pack URL</label>
+						<div class="uk-form-controls">
+							<input class="uk-input" type="text"
+								   v-model="creator.metadata.url"
+								   placeholder="e.g. johnsmith.github.io/quiplash-ghostbusters">
 						</div>
 					</div>
 				</div>

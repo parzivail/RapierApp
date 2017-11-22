@@ -1,7 +1,11 @@
+@import url('https://fonts.googleapis.com/css?family=Titillium+Web');
+
+$tab-item-active-border: #0D0D0D;
+$border-radius: 3px;
+$global-font-family: "Titillium Web", "Roboto", "Ariel", sans-serif;
+
 @import "uikit/variables-theme";
 @import "uikit/mixins-theme";
-
-$border-radius: 3px;
 
 @mixin hook-button() {
   border-radius: $border-radius;
