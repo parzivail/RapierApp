@@ -20,7 +20,7 @@ function createWindow() {
 		slashes: true
 	}));
 
-	if (process.env.NODE_ENV !== 'production') {
+	if (process.env.NODE_ENV === 'dev') {
 		require('vue-devtools').install();
 		win.webContents.openDevTools();
 	}

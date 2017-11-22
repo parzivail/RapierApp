@@ -49,9 +49,12 @@ String.prototype.hashCode = function () {
  * Config
  */
 nconf.file({file: 'config.json'});
+var firstTimeLoad = false;
 
-if (!nconf.get('quiplash'))
+if (!nconf.get('quiplash')) {
 	nconf.set('quiplash:path', "");
+	firstTimeLoad = true;
+}
 
 /*
  * UI Helpers
@@ -72,7 +75,7 @@ function loadDlcFromInstallDir() {
 			app.loadedDlc.push(quiplash.loadDlcPath(path.join(dlcDir, otherPackDirs[i])));
 	}
 	else {
-		alert.error("Navigate to the SETUP tab to select your Quiplash installation.");
+		alert.error("Navigate to the <i>Rapier Setup</i> tab select a valid Quiplash executable.");
 	}
 }
 
@@ -81,7 +84,10 @@ function onQuiplashPathChange(newPath) {
 	app.quipPath = newPath || app.quipPath;
 	app.isQuiplashPathInvalid = !fileutils.isValidQuiplash(app.quipPath);
 	if (app.isQuiplashPathInvalid) {
-		alert.error("That isn't a valid Quiplash executable.<br /><br />A valid path looks similar to:<pre>C:\\Program Files (x86)\\...\\Quiplash\\Quiplash.exe</pre>")
+		if (firstTimeLoad) // Don't want to scare them with a nasty error on first launch
+			alert.info("To begin, navigate to the <i>Rapier Setup</i> tab select your Quiplash executable.");
+		else
+			alert.error("That isn't a valid Quiplash executable.<br /><br />A valid path looks similar to:<pre>...\\Steam\\steamapps\\common\\Quiplash\\Quiplash.exe</pre>")
 	}
 	else {
 		loadDlcFromInstallDir();
@@ -144,6 +150,22 @@ var tabs,
 					keywords: "",
 					keywordResponseText: ""
 				}
+			},
+			selectQuipExe: function () {
+				dialog.showOpenDialog({
+					title: "Select Quiplash executable",
+					filters: [
+						{
+							name: "Executable",
+							extensions: ["exe"]
+						}
+					]
+				}, function (fileName) {
+					if (!fileName)
+						return;
+
+					onQuiplashPathChange(fileName[0]);
+				});
 			},
 			stripHtml: function (string) {
 				return escape(string);
@@ -341,10 +363,3 @@ by.id("textQuiplash").onkeyup = function () {
 by.id("textQuiplash").onchange = function () {
 	onQuiplashPathChange();
 };
-
-UIkit.upload('#qppick', {
-	beforeAll: function (e) {
-		onQuiplashPathChange(by.id("fileQuiplash").files[0].path);
-		return false;
-	}
-});

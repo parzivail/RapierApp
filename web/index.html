@@ -279,14 +279,12 @@
 			<h3 class="uk-heading-line uk-text-center"><span>Setup</span></h3>
 			<div class="uk-form-horizontal">
 				<div class="uk-margin uk-align-right">
-					<label class="uk-form-label" for="qppick">
+					<label class="uk-form-label">
 						Select Quiplash Executable
 					</label>
 					<div class="uk-form-controls">
-						<div class="js-upload" uk-form-custom id="qppick">
-							<input type="file" id="fileQuiplash">
-							<button class="uk-button uk-button-default" type="button">Select</button>
-						</div>
+						<button class="uk-button uk-button-default" type="button" v-on:click="selectQuipExe()">Select
+						</button>
 					</div>
 				</div>
 				<div class="uk-margin">
