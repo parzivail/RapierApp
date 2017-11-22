@@ -5,7 +5,6 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Rapier</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
-	<link rel="stylesheet" href="css/uikit.min.css">
 	<link rel="stylesheet" href="css/sweetalert2.min.css">
 	<link rel="stylesheet" href="css/style.css">
 </head>
@@ -20,13 +19,15 @@
 	</ul>
 	<ul class="uk-switcher uk-padding squish" id="pages">
 		<li>
-			<h3 class="uk-heading-line uk-text-center"><span>Quick Import</span></h3>
-			<div class="uk-margin">
-				<div class="js-upload uk-width-1-1" uk-form-custom id="contentpack">
-					<input type="file" id="fileContentpack">
-					<button class="uk-button uk-button-default uk-width-1-1" type="button">Import Content Pack</button>
-				</div>
-			</div>
+			<h3 class="uk-heading-line uk-text-center"><span>Quick Actions</span></h3>
+			<button class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom" type="button"
+					v-on:click="loadContentPack()">Import
+				Content Pack
+			</button>
+			<button class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom" type="button"
+					v-on:click="switchToCreateTab()">Create
+				New Pack
+			</button>
 			<h3 class="uk-heading-line uk-text-center"><span>Tutorial</span></h3>
 		</li>
 		<li>

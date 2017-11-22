@@ -87,7 +87,7 @@ QuestionPack.prototype.save = function () {
 	};
 
 	var newContent = {
-		episodeId: this.episodeId,
+		episodeid: this.episodeId,
 		content: []
 	};
 

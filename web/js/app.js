@@ -97,6 +97,9 @@ var tabs,
 					keywordResponseText: ""
 				}
 			},
+			switchToCreateTab: function () {
+				tabs.show(2);
+			},
 			getNumFilteredQuestions: function (item) {
 				var filter = this.promptFilter;
 				return item.questions.filter(function (a) {
@@ -192,18 +195,31 @@ var tabs,
 							this.editorPrompt.mature = null;
 						}
 			},
-			loadContentPack: function (contentpack) {
+			loadContentPack: function () {
 				if (app.isQuiplashPathInvalid) {
 					alert.info("You must select your Quiplash executable first.");
 					return;
 				}
 
-				var quipDir = fileutils.isValidQuiplash(this.quipPath);
-				extract(contentpack, {dir: path.join(quipDir, 'DLC', path.basename(contentpack, path.extname(contentpack)))}, function (err) {
-					if (err)
-						alert.error("Failed to import content pack: " + err);
-					else
-						alert.success("Imported pack successfully.");
+				dialog.showOpenDialog({
+					title: "Import DLC from...",
+					filters: [
+						{
+							name: "ZIP Archive",
+							extensions: ["zip"]
+						}
+					]
+				}, function (fileName) {
+					if (!fileName)
+						return;
+
+					var quipDir = fileutils.isValidQuiplash(this.quipPath);
+					extract(fileName, {dir: path.join(quipDir, 'DLC', path.basename(fileName, path.extname(fileName)))}, function (err) {
+						if (err)
+							alert.error("Failed to import content pack: " + err);
+						else
+							alert.success("Imported pack successfully.");
+					});
 				});
 			},
 			createDlc: function () {
@@ -235,6 +251,9 @@ var tabs,
 						}
 					]
 				}, function (fileName) {
+					if (!fileName)
+						return;
+
 					dlc.export(fileName);
 				});
 			},
@@ -281,13 +300,6 @@ by.id("textQuiplash").onchange = function () {
 UIkit.upload('#qppick', {
 	beforeAll: function (e) {
 		onQuiplashPathChange(by.id("fileQuiplash").files[0].path);
-		return false;
-	}
-});
-
-UIkit.upload('#contentpack', {
-	beforeAll: function (e) {
-		app.loadContentPack(by.id("fileContentpack").files[0].path);
 		return false;
 	}
 });
