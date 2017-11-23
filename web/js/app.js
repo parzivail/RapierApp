@@ -16,11 +16,13 @@ const nconf = require('nconf'),
 	by = rq.local('./by'),
 	quiplash = rq.local('./quiplash'),
 	alert = rq.local('./alert');
+analytics = rq.local('./analytics');
 
 /*
- * Error Reporting
+ * Analytics
  */
-Rollbar.debug("init");
+analytics.init();
+analytics.event('core', 'init');
 
 /*
  * Polyfill
@@ -222,6 +224,8 @@ var tabs,
 
 				item.questions.unshift(newQuestion);
 				this.startEditing(newQuestion);
+
+				analytics.event('question', 'add');
 			},
 			addBulkQuestions: function (item) {
 				var newPrompts = this.bulkAddPrompts.split("\n");
@@ -250,6 +254,8 @@ var tabs,
 
 					item.questions.push(newQuestion);
 				}
+
+				analytics.event('question', 'add-bulk');
 			},
 			deleteQuestion: function (item, prompt) {
 				for (var i = 0; i < item.questions.length; i++) {
@@ -259,6 +265,8 @@ var tabs,
 					item.questions.splice(i, 1);
 					return;
 				}
+
+				analytics.event('question', 'delete');
 			},
 			startEditing: function (prompt) {
 				this.editorPrompt.text = prompt.prompt;
@@ -309,6 +317,8 @@ var tabs,
 							alert.success("Imported pack successfully.");
 					});
 				});
+
+				analytics.event('dlc', 'import');
 			},
 			exportDlc: function (dlc) {
 				dialog.showSaveDialog({
@@ -325,6 +335,8 @@ var tabs,
 							console.log("Exported pack as", exportPath);
 					});
 				});
+
+				analytics.event('dlc', 'export');
 			},
 			createDlc: function () {
 				var quipDir = fileutils.isValidQuiplash(this.quipPath);
@@ -342,18 +354,20 @@ var tabs,
 				this.creator.metadata.author = "";
 				this.creator.metadata.description = "";
 				this.creator.metadata.url = "";
+
+				analytics.event('dlc', 'create');
 			},
 			saveDlc: function (dlc) {
 				alert.confirm("Are you sure you want to save \"" + dlc.manifest.name + "\"? This will overwrite the current content.", function (shouldSave) {
 					if (!shouldSave)
 						return;
 					dlc.save();
-				})
+				});
 			},
 			deleteDlc: function (dlc) {
 				if (dlc.episodeId === 1223)
 					alert.info("You cannot delete the main content pack.");
-				else
+				else {
 					alert.confirm("Are you sure you want to delete \"" + dlc.manifest.name + "\"? This cannot be undone.", function (shouldDelete) {
 						if (!shouldDelete)
 							return;
@@ -366,7 +380,10 @@ var tabs,
 							app.loadedDlc.splice(i, 1);
 							return;
 						}
-					}, true)
+					}, true);
+
+					analytics.event('dlc', 'delete');
+				}
 			}
 		}
 	});
