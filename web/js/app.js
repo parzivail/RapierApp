@@ -8,6 +8,7 @@ const nconf = require('nconf'),
 	escape = require('escape-html'),
 	openurl = require('openurl'),
 	extract = require('extract-zip'),
+	zipFolder = require("zip-folder"),
 	dialog = require('electron').remote.dialog,
 	rq = require('electron-require'),
 	temp = rq.set('local', './web/js/modules'),
@@ -15,6 +16,11 @@ const nconf = require('nconf'),
 	by = rq.local('./by'),
 	quiplash = rq.local('./quiplash'),
 	alert = rq.local('./alert');
+
+/*
+ * Error Reporting
+ */
+Rollbar.debug("init");
 
 /*
  * Polyfill
@@ -64,15 +70,25 @@ function loadDlcFromInstallDir() {
 	if (quipDir) {
 		app.loadedDlc.splice(0, app.loadedDlc.length);
 		var defaultPack = quiplash.loadDlcPath(path.join(quipDir, 'content'));
-		if (!defaultPack)
-			throw new Error("Could not load Quiplash content");
+		if (!defaultPack) {
+			alert.error("Failed to load main Quiplash content. Your Quiplash installation may be corrupt.");
+			return;
+		}
 
 		app.loadedDlc.push(defaultPack);
 
+		var failed = 0;
 		var dlcDir = path.join(quipDir, 'DLC'),
 			otherPackDirs = fs.readdirSync(dlcDir).filter(f => fs.statSync(path.join(dlcDir, f)).isDirectory());
-		for (var i = 0; i < otherPackDirs.length; i++)
-			app.loadedDlc.push(quiplash.loadDlcPath(path.join(dlcDir, otherPackDirs[i])));
+		for (var i = 0; i < otherPackDirs.length; i++) {
+			var pack = quiplash.loadDlcPath(path.join(dlcDir, otherPackDirs[i]));
+			if (pack)
+				app.loadedDlc.push(pack);
+			else
+				failed++;
+		}
+		if (failed > 0)
+			alert.error("Failed to load " + failed + " content pack" + (failed == 1 ? "" : "s") + ".");
 	}
 	else {
 		alert.error("Navigate to the <i>Rapier Setup</i> tab select a valid Quiplash executable.");
@@ -270,7 +286,7 @@ var tabs,
 							this.editorPrompt.mature = null;
 						}
 			},
-			loadContentPack: function () {
+			importDlc: function () {
 				if (app.isQuiplashPathInvalid) {
 					alert.info("You must select your Quiplash executable first.");
 					return;
@@ -285,10 +301,28 @@ var tabs,
 
 					var quipDir = fileutils.isValidQuiplash(this.quipPath);
 					extract(fileName, {dir: path.join(quipDir, 'DLC', path.basename(fileName, path.extname(fileName)))}, function (err) {
-						if (err)
+						if (err) {
+							Rollbar.error("Failed to unpack RAP", err);
 							alert.error("Failed to import content pack: " + err);
+						}
 						else
 							alert.success("Imported pack successfully.");
+					});
+				});
+			},
+			exportDlc: function (dlc) {
+				dialog.showSaveDialog({
+					title: "Export DLC to...",
+					filters: this.contentFilter
+				}, function (fileName) {
+					if (!fileName)
+						return;
+
+					zipFolder(dlc.contentPath, fileName, function (err) {
+						if (err)
+							Rollbar.error("Failed to pack RAP", err);
+						else
+							console.log("Exported pack as", exportPath);
 					});
 				});
 			},
@@ -296,10 +330,13 @@ var tabs,
 				var quipDir = fileutils.isValidQuiplash(this.quipPath);
 				var dlcDir = path.join(quipDir, 'DLC');
 				var newDlc = quiplash.createNewDlc(this.creator.name, this.creator.packId, this.creatorEpisodeId, this.creator.metadata, dlcDir);
+
 				this.loadedDlc.push(newDlc);
 				refreshDlc();
+
 				alert.info("Your new DLC has been created. Keep in mind that the DLC WILL NOT be saved until you click <i>Save</i>");
 				tabs.show(1);
+
 				this.creator.name = "";
 				this.creator.packId = "";
 				this.creator.metadata.author = "";
@@ -312,17 +349,6 @@ var tabs,
 						return;
 					dlc.save();
 				})
-			},
-			exportDlc: function (dlc) {
-				dialog.showSaveDialog({
-					title: "Export DLC to...",
-					filters: this.contentFilter
-				}, function (fileName) {
-					if (!fileName)
-						return;
-
-					dlc.export(fileName);
-				});
 			},
 			deleteDlc: function (dlc) {
 				if (dlc.episodeId === 1223)

@@ -4,7 +4,6 @@
 var uuid = require('uuid/v4'),
 	fs = require('fs'),
 	fsextra = require('fs-extra'),
-	zipFolder = require("zip-folder"),
 	rimraf = require('rimraf').sync,
 	path = require('path');
 
@@ -177,27 +176,10 @@ QuestionPack.prototype.save = function () {
 		if (err)
 			console.log("Couldn't save content JET for episode", self.episodeId, "- error:", err);
 	});
-
-	/*
-	 ``create folder {name = "Question"}
-	 ``foreach question
-	 ````if !exists (folder {name = question.id})
-	 ``````create folder {name = question.id}
-	 ````populate folder
-	 ``````vo.mp3
-	 ``````joke.mp3
-	 ````write out data.jet
-	 */
 };
 
 QuestionPack.prototype.delete = function () {
 	rimraf(this.contentPath);
-};
-
-QuestionPack.prototype.export = function (exportPath) {
-	zipFolder(this.contentPath, exportPath, function () {
-		console.log("Exported pack as", exportPath);
-	});
 };
 
 module.exports = QuestionPack;
