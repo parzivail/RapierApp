@@ -23,7 +23,7 @@ const nconf = require('nconf'),
  */
 analytics.init();
 
-// emit init gisnal
+// emit init event
 analytics.event('core', 'init');
 
 /*
