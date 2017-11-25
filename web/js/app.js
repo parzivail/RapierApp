@@ -283,6 +283,9 @@ var tabs,
 				for (var i = 0; i < newPrompts.length; i++)
 					this.addQuestion(item, true, newPrompts[i])
 
+				// clear the menu
+				this.bulkAddPrompts = null;
+
 				analytics.event('question', 'add-bulk');
 			},
 			// deletes the selected question
@@ -369,7 +372,8 @@ var tabs,
 			exportDlc: function (dlc) {
 				dialog.showSaveDialog({
 					title: "Export DLC to...",
-					filters: this.contentFilter
+					filters: this.contentFilter,
+					defaultPath: dlc.manifest.id
 				}, function (fileName) {
 					if (!fileName)
 						return;
@@ -399,10 +403,16 @@ var tabs,
 				this.loadedDlc.push(newDlc);
 				this.refresh();
 
-				// show a warning about data retention
-				alert.info("Your new DLC has been created. Keep in mind that the DLC WILL NOT be saved until you click <i>Save</i>");
-				// go to the DLC tab
-				tabs.show(1);
+				//show a warning about data retention
+				alert.info("Your new DLC has been created. Keep in mind that the DLC WILL NOT be saved until you click <i>Save</i>", function () {
+					// go to the DLC tab
+					tabs.show(1);
+
+					// show this new DLC
+					UIkit.tab("#tabDlc", {
+						connect: "#component-nav"
+					}).show(app.loadedDlc.length - 1);
+				});
 
 				// clear the Create tab fields
 				this.creator.name = "";
