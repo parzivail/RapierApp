@@ -10,6 +10,7 @@
 </head>
 <body>
 <div id="rapier">
+	<!-- Main tab headers -->
 	<ul class="uk-child-width-expand uk-background-muted squish" id="nav" uk-tab="animation: uk-animation-fade;">
 		<li><a>Getting Started</a></li>
 		<li><a>Manage Packs</a></li>
@@ -17,13 +18,17 @@
 		<li><a>Prompt Editor</a></li>
 		<li><a>Rapier Setup</a></li>
 	</ul>
+	<!-- Main tab bodies -->
 	<ul class="uk-switcher uk-padding squish" id="pages">
 		<li>
+			<!-- Home tab -->
 			<h3 class="uk-heading-line uk-text-center"><span>Quick Actions</span></h3>
+			<!-- Quick Impory -->
 			<button class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom" type="button"
 					v-on:click="importDlc()">Import
 				Content Pack
 			</button>
+			<!-- Quick Create -->
 			<button class="uk-button uk-button-default uk-width-1-1 uk-margin-small-bottom" type="button"
 					v-on:click="switchToCreateTab()">Create
 				New Pack
@@ -31,11 +36,10 @@
 			<h3 class="uk-heading-line uk-text-center"><span>Tutorial</span></h3>
 		</li>
 		<li>
-			<div v-if="!appLoaded">
-				<vue-simple-spinner></vue-simple-spinner>
-			</div>
+			<!-- Pack Editor tab -->
 			<h3 class="uk-heading-line uk-text-center"><span>Pack Editor</span></h3>
 			<div uk-grid>
+				<!-- Left-tabs for each DLC -->
 				<div class="uk-width-small">
 					<ul class="uk-nav uk-nav-default uk-tab-left"
 						id="tabDlc">
@@ -44,14 +48,17 @@
 						</li>
 					</ul>
 				</div>
+				<!-- Each DLC bodies -->
 				<div class="uk-width-expand">
 					<ul id="component-nav" class="uk-switcher">
 						<li v-for="(item, idx) in loadedDlc" v-bind:key="item.id">
+							<!-- DLC modal for bulk addition -->
 							<div v-bind:id="'modal-bulkadd' + idx" class="uk-modal-container" uk-modal>
 								<div class="uk-modal-dialog">
 									<div class="uk-modal-header">
 										<h2 class="uk-modal-title">Bulk Add Prompts</h2>
 									</div>
+									<!-- Prompt textarea -->
 									<div class="uk-modal-body" uk-overflow-auto>
 										<div class="uk-margin">
 											<label class="uk-form-label">Prompts (one per line)</label>
@@ -61,6 +68,7 @@
 											</div>
 										</div>
 									</div>
+									<!-- Modal controls -->
 									<div class="uk-modal-footer uk-text-right">
 										<button class="uk-button uk-button-default uk-modal-close" type="button">
 											Cancel
@@ -71,9 +79,11 @@
 									</div>
 								</div>
 							</div>
+							<!-- Fields for each DLC -->
 							<div class="uk-fieldset">
 								<div class="uk-form-horizontal">
 									<div class="uk-margin">
+										<!-- Pack Name -->
 										<label class="uk-form-label" for="packname">Pack Name</label>
 										<div class="uk-form-controls">
 											<input class="uk-input" type="text" id="packname"
@@ -82,6 +92,7 @@
 												   placeholder="Pack Name">
 										</div>
 									</div>
+									<!-- Pack ID -->
 									<div class="uk-margin">
 										<label class="uk-form-label" for="packid">Pack ID</label>
 										<div class="uk-form-controls">
@@ -91,6 +102,7 @@
 												   placeholder="Pack ID">
 										</div>
 									</div>
+									<!-- Metadata listings -->
 									<div class="uk-margin" v-if="item.manifest.metadata.hasMetadata">
 										<label class="uk-form-label">Metadata</label>
 										<div class="uk-form-controls">
@@ -102,29 +114,36 @@
 											</ul>
 										</div>
 									</div>
+									<!-- Actions -->
 									<div class="uk-margin">
 										<label class="uk-form-label" for="savedlc">Actions</label>
 										<div class="uk-form-controls">
+											<!-- Save -->
 											<button class="uk-button uk-button-default"
 													v-on:click="saveDlc(item)" id="savedlc">Save
 											</button>
+											<!-- Export -->
 											<button class="uk-button uk-button-default"
 													v-on:click="exportDlc(item)" id="exportdlc">Export
 											</button>
+											<!-- Delete -->
 											<button class="uk-button uk-button-danger"
 													v-bind:disabled="item.episodeId === 1223"
 													v-on:click="deleteDlc(item)">Delete
 											</button>
+											<!-- Add Question -->
 											<div class="uk-button-group">
 												<button class="uk-button uk-button-default"
 														v-on:click="addQuestion(item)">Add Question
 												</button>
+												<!-- Add Bulk -->
 												<a class="uk-button uk-button-default"
 												   v-bind:href="'#modal-bulkadd' + idx" uk-toggle>Bulk
 												</a>
 											</div>
 										</div>
 									</div>
+									<!-- Prompt filter -->
 									<div class="uk-margin">
 										<label class="uk-form-label" for="filter">Filter Prompts</label>
 										<div class="uk-form-controls">
@@ -135,7 +154,9 @@
 									</div>
 								</div>
 							</div>
+							<!-- List of prompts -->
 							<table class="uk-table uk-table-striped">
+								<!-- Table header -->
 								<caption>{{ item.questions.length }} prompts <span
 										v-if="getNumFilteredQuestions(item) !== item.questions.length">({{ getNumFilteredQuestions(item) }} shown via filter)</span>
 								</caption>
@@ -146,13 +167,16 @@
 								</tr>
 								</thead>
 								<tbody>
+								<!-- Each prompt -->
 								<tr v-for="prompt in item.questions" v-bind:id="prompt.uuid"
 									v-if="prompt.prompt.search(promptFilter) !== -1 || !promptFilter">
 									<td>{{ prompt.prompt }}</td>
 									<td>
 										<ul class="uk-iconnav">
+											<!-- Edit -->
 											<li><a :uk-icon="'icon: file-edit'" title="Edit"
 												   v-on:click="startEditing(prompt)"></a></li>
+											<!-- Delete -->
 											<li><a :uk-icon="'icon: trash'" class="uk-text-danger"
 												   v-on:click="deleteQuestion(item, prompt)"
 												   title="Delete"></a></li>
@@ -167,9 +191,11 @@
 			</div>
 		</li>
 		<li>
+			<!-- Pack Creator -->
 			<div class="uk-fieldset">
 				<h3 class="uk-heading-line uk-text-center"><span>Pack Creator</span></h3>
 				<div class="uk-form-horizontal">
+					<!-- Name -->
 					<div class="uk-margin">
 						<label class="uk-form-label">Pack Name</label>
 						<div class="uk-form-controls">
@@ -178,6 +204,7 @@
 								   placeholder="e.g. Ghostbusters Pack">
 						</div>
 					</div>
+					<!-- Author -->
 					<div class="uk-margin">
 						<label class="uk-form-label">Pack Author</label>
 						<div class="uk-form-controls">
@@ -186,6 +213,7 @@
 								   placeholder="e.g. John Smith">
 						</div>
 					</div>
+					<!-- ID -->
 					<div class="uk-margin">
 						<label class="uk-form-label">Pack ID</label>
 						<div class="uk-form-controls">
@@ -194,6 +222,7 @@
 								   placeholder="e.g. johnsmith_ghostbusters">
 						</div>
 					</div>
+					<!-- Description -->
 					<div class="uk-margin">
 						<label class="uk-form-label">Pack Description</label>
 						<div class="uk-form-controls">
@@ -202,15 +231,17 @@
 								   placeholder="e.g. Ghostbusters-themed prompts, based only on the first movie">
 						</div>
 					</div>
+					<!-- URL -->
 					<div class="uk-margin">
 						<label class="uk-form-label">Pack URL</label>
 						<div class="uk-form-controls">
 							<input class="uk-input" type="text"
 								   v-model="creator.metadata.url"
-								   placeholder="e.g. johnsmith.github.io/quiplash-ghostbusters">
+								   placeholder="e.g. http://johnsmith.github.io/quiplash-ghostbusters">
 						</div>
 					</div>
 				</div>
+				<!-- Create -->
 				<div class="uk-margin">
 					<button class="uk-button uk-button-default uk-align-right" v-on:click="createDlc()">Create
 					</button>
@@ -218,9 +249,11 @@
 			</div>
 		</li>
 		<li>
+			<!-- Prompt Editor -->
 			<fieldset class="uk-fieldset">
 				<div class="uk-form-horizontal">
 					<h3 class="uk-heading-line uk-text-center"><span>Prompt Editor</span></h3>
+					<!-- Text -->
 					<div class="uk-margin">
 						<label class="uk-form-label">Prompt Text</label>
 						<div class="uk-form-controls">
@@ -228,6 +261,7 @@
 								   v-bind:disabled="!editing">
 						</div>
 					</div>
+					<!-- Author -->
 					<div class="uk-margin">
 						<label class="uk-form-label">Prompt Author</label>
 						<div class="uk-form-controls">
@@ -235,6 +269,7 @@
 								   v-bind:disabled="!editing">
 						</div>
 					</div>
+					<!-- Author Location -->
 					<div class="uk-margin">
 						<label class="uk-form-label">Author Location</label>
 						<div class="uk-form-controls">
@@ -243,14 +278,17 @@
 								   v-bind:disabled="!editing">
 						</div>
 					</div>
+					<!-- Is NSFW? -->
 					<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
 						<label><input class="uk-checkbox" type="checkbox" v-model="editorPrompt.mature"
 									  v-bind:disabled="!editing"> NSFW</label>
 					</div>
+					<!-- Has joke? -->
 					<div class="uk-margin uk-grid-small uk-child-width-auto uk-grid">
 						<label><input class="uk-checkbox" type="checkbox" v-model="editorPrompt.jet.hasJokeAudio"
 									  v-bind:disabled="!editing"> Has Joke</label>
 					</div>
+					<!-- Joke Text -->
 					<div class="uk-margin">
 						<label class="uk-form-label">Keyword Response (Joke) Text</label>
 						<div class="uk-form-controls">
@@ -259,6 +297,7 @@
 								   v-bind:disabled="!editing || !editorPrompt.jet.hasJokeAudio">
 						</div>
 					</div>
+					<!-- Joke triggers -->
 					<div class="uk-margin">
 						<label class="uk-form-label">Keyword Response (Joke) Triggers (one per line)</label>
 						<div class="uk-form-controls">
@@ -267,6 +306,7 @@
 									  v-bind:disabled="!editing || !editorPrompt.jet.hasJokeAudio"></textarea>
 						</div>
 					</div>
+					<!-- Save -->
 					<div class="uk-margin">
 						<button class="uk-button uk-button-default uk-align-right" v-on:click="stopEditing()"
 								v-bind:disabled="!editing">Save
@@ -276,17 +316,20 @@
 			</fieldset>
 		</li>
 		<li>
+			<!-- Setup -->
 			<h3 class="uk-heading-line uk-text-center"><span>Setup</span></h3>
 			<div class="uk-form-horizontal">
 				<div class="uk-margin uk-align-right">
 					<label class="uk-form-label">
 						Select Quiplash Executable
 					</label>
+					<!-- Quiplash selector -->
 					<div class="uk-form-controls">
 						<button class="uk-button uk-button-default" type="button" v-on:click="selectQuipExe()">Select
 						</button>
 					</div>
 				</div>
+				<!-- Quiplash path editor -->
 				<div class="uk-margin">
 					<input class="uk-input" id="textQuiplash" v-bind:class="{ 'uk-form-danger': isQuiplashPathInvalid }"
 						   type="text"
@@ -301,7 +344,6 @@
 <script src="js/uikit.min.js"></script>
 <script src="js/uikit-icons.min.js"></script>
 <script src="js/vue.js"></script>
-<script src="js/vue-simple-spinner.min.js"></script>
 <script src="js/sweetalert2.min.js"></script>
 <script src="js/app.js"></script>
 </body>
